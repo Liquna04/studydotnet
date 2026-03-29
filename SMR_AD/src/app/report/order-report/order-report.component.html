@@ -1,0 +1,192 @@
+<nz-page-header class="site-page-header" nzBackIcon>
+  <nz-page-header-title>BÁO CÁO BẢNG KÊ CHI TIẾT ĐƠN HÀNG</nz-page-header-title>
+
+  <nz-page-header-content>
+    <div class="toolbar-actions">
+      <button nz-button nzType="text" (click)="onPreview()" [nzLoading]="isLoadingPreview">
+        <span nz-icon nzType="search"></span> Xem trước
+      </button>
+
+      <button nz-button nzType="text" (click)="onExportExcel()">
+        <span nz-icon nzType="file-excel"></span> Xuất excel
+      </button>
+    </div>
+
+    <div class="filter-container">
+      <div nz-row [nzGutter]="24">
+
+        <!-- Cửa hàng/Khách hàng -->
+        <div nz-col [nzSpan]="6">
+          <div class="form-item">
+            <label class="ant-form-item-required">Cửa hàng/Khách hàng</label>
+            <nz-select 
+              [(ngModel)]="filterData.storeOrCustomer" 
+              nzShowSearch 
+              nzAllowClear 
+              nzPlaceHolder="Chọn đối tượng"
+            >
+              <nz-option *ngFor="let item of listStoreCustomer" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+
+        <!-- Mặt hàng -->
+        <div nz-col [nzSpan]="6">
+          <div class="form-item">
+            <label>Mặt hàng</label>
+            <nz-select 
+              [(ngModel)]="filterData.itemType" 
+              nzAllowClear 
+              nzShowSearch
+              nzPlaceHolder="Chọn mặt hàng"
+            >
+              <nz-option 
+                *ngFor="let item of listItemTypes" 
+                [nzValue]="item.value" 
+                [nzLabel]="item.label"
+              ></nz-option>
+            </nz-select>
+          </div>
+        </div>
+
+        <!-- Trạng thái -->
+        <div nz-col [nzSpan]="6">
+          <div class="form-item">
+            <label>Trạng thái</label>
+            <nz-select [(ngModel)]="filterData.status" nzAllowClear nzPlaceHolder="-">
+              <nz-option nzValue="1" nzLabel="Khởi tạo"></nz-option>
+              <nz-option nzValue="2" nzLabel="Chờ phê duyệt"></nz-option>
+              <nz-option nzValue="3" nzLabel="Đã phê duyệt"></nz-option>
+              <nz-option nzValue="4" nzLabel="Từ chối"></nz-option>
+              <nz-option nzValue="5" nzLabel="Đã xác nhận thực nhận"></nz-option>
+              <nz-option nzValue="-1" nzLabel="Hủy đơn hàng"></nz-option>
+              <nz-option nzValue="-3" nzLabel="Đã phê duyệt lượng"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        
+        <!-- Ngày đặt hàng -->
+        <div nz-col [nzSpan]="12"> 
+          <div class="form-item">
+            <label>Ngày đặt hàng</label>
+            
+            <div class="date-group">
+              <nz-range-picker 
+                [(ngModel)]="filterData.dateRange" 
+                [nzFormat]="'dd/MM/yyyy'"
+                style="flex: 1;" 
+              ></nz-range-picker>
+
+              <nz-radio-group 
+                [(ngModel)]="filterData.shift" 
+                style="margin-left: 16px; display: flex; gap: 15px;"
+              >
+                <label nz-radio nzValue="day">Ngày</label>
+                <label nz-radio nzValue="night">Đêm</label>
+              </nz-radio-group>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BẢNG XEM TRƯỚC -->
+    <div class="preview-section" *ngIf="showPreviewTable" style="margin-top: 24px;">
+      <h3>Kết quả xem trước</h3>
+      
+      <!-- Bảng cho Đơn hàng -->
+      <nz-table 
+        #orderTable 
+        [nzData]="orderPreviewData" 
+        [nzLoading]="isLoadingPreview"
+        nzBordered
+        nzSize="small"
+        [nzScroll]="{ x: '2000px' }" 
+        [nzFrontPagination]="false"
+        [nzShowPagination]="false"
+      >
+        <thead>
+          <tr>
+            <th nzWidth="50px" nzAlign="center">STT</th>
+            <th nzWidth="140px">Số đơn hàng SMO</th>
+            <th nzWidth="100px">Loại đơn</th>
+            <th nzWidth="150px" *ngIf="appliedStoreOrCustomer === 'Customer'">Khách hàng</th>
+            <th nzWidth="150px" *ngIf="appliedStoreOrCustomer === 'Store'">Cửa hàng</th>
+            
+            <th nzWidth="200px">Mặt hàng</th>
+            <th nzWidth="90px" nzAlign="right">Lượng đặt</th>
+            <th nzWidth="90px" nzAlign="right">Lượng duyệt</th>
+
+            <th nzWidth="100px">Số xe</th>
+            <th nzWidth="130px">Tên tài xế</th>
+            <th nzWidth="110px" nzAlign="center">Ngày đặt</th>
+            <th nzWidth="110px" nzAlign="center">Ngày nhận</th>
+            <th nzWidth="150px">Ghi chú</th>
+            <th nzWidth="110px" nzAlign="center">Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let data of orderPreviewData">
+            <ng-container *ngIf="data.danhSachMatHang && data.danhSachMatHang.length > 0; else noProduct">
+              <tr *ngFor="let item of data.danhSachMatHang; let i = index">
+                
+                <td *ngIf="i === 0" [attr.rowspan]="data.danhSachMatHang.length" nzAlign="center">{{ data.stt }}</td>
+                <td *ngIf="i === 0" [attr.rowspan]="data.danhSachMatHang.length">{{ data.soDonHangSMO }}</td>
+                <td *ngIf="i === 0" [attr.rowspan]="data.danhSachMatHang.length">{{ data.loaiDonHang }}</td>
+                
+                <td *ngIf="i === 0 && appliedStoreOrCustomer === 'Customer'" [attr.rowspan]="data.danhSachMatHang.length">
+                  {{ data.khachHang }}
+                </td>
+                <td *ngIf="i === 0 && appliedStoreOrCustomer === 'Store'" [attr.rowspan]="data.danhSachMatHang.length">
+                  {{ data.cuaHang }}
+                </td>
+
+                <td>{{ item.matHang }}</td>
+                <td nzAlign="right">{{ item.luongDat | number:'1.0-2' }}</td>
+                <td nzAlign="right">{{ item.luongPheDuyet | number:'1.0-2' }}</td>
+
+                <td *ngIf="i === 0" [attr.rowspan]="data.danhSachMatHang.length">{{ data.soXe }}</td>
+                <td *ngIf="i === 0" [attr.rowspan]="data.danhSachMatHang.length">{{ data.tenTaiXe }}</td>
+                <td *ngIf="i === 0" [attr.rowspan]="data.danhSachMatHang.length" nzAlign="center">
+                  {{ data.ngayDatHang | date: 'dd/MM/yyyy' }}
+                </td>
+                <td *ngIf="i === 0" [attr.rowspan]="data.danhSachMatHang.length" nzAlign="center">
+                  {{ data.ngayNhanHang | date: 'dd/MM/yyyy' }}
+                </td>
+                <td *ngIf="i === 0" [attr.rowspan]="data.danhSachMatHang.length">{{ data.ghiChu }}</td>
+                <td *ngIf="i === 0" [attr.rowspan]="data.danhSachMatHang.length" nzAlign="center">
+                    <span [ngClass]="{
+                        'status-approved': data.trangThai === 'Đã phê duyệt',
+                        'status-pending': data.trangThai === 'Chờ phê duyệt',
+                        'status-reject': data.trangThai === 'Từ chối'
+                    }">{{ data.trangThai }}</span>
+                </td>
+              </tr>
+            </ng-container>
+
+            <ng-template #noProduct>
+              <tr>
+                <td nzAlign="center">{{ data.stt }}</td>
+                <td>{{ data.soDonHangSMO }}</td>
+                <td>{{ data.loaiDonHang }}</td>
+                <td *ngIf="appliedStoreOrCustomer === 'Customer'">{{ data.khachHang }}</td>
+                <td *ngIf="appliedStoreOrCustomer === 'Store'">{{ data.cuaHang }}</td>
+                
+                <td colspan="3" nzAlign="center" style="color: #999; font-style: italic;">Không có dữ liệu mặt hàng</td>
+                
+                <td>{{ data.soXe }}</td>
+                <td>{{ data.tenTaiXe }}</td>
+                <td nzAlign="center">{{ data.ngayDatHang | date: 'dd/MM/yyyy' }}</td>
+                <td nzAlign="center">{{ data.ngayNhanHang | date: 'dd/MM/yyyy' }}</td>
+                <td>{{ data.ghiChu }}</td>
+                <td nzAlign="center">{{ data.trangThai }}</td>
+              </tr>
+            </ng-template>
+          </ng-container>
+        </tbody>
+      </nz-table>
+    </div>
+
+  </nz-page-header-content>
+</nz-page-header>

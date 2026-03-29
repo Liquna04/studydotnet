@@ -1,0 +1,337 @@
+﻿:host,
+.unload-point-page,
+.unload-point-scroll-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.unload-point-layout {
+  nz-page-header {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    ::ng-deep .ant-page-header {
+      margin: 0;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e8e8e8;
+    }
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.search-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-grow: 1;
+  min-width: 300px;
+}
+
+.search-group .search-input {
+  flex: 1;
+}
+
+.search-buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.action-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.action-group button {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+
+.action-group button span,
+.action-group button nz-icon,
+.action-group button i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+  :host ::ng-deep .ant-page-header-heading-extra {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .action-group {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .action-group button {
+    flex: 1 1 0;
+    width: auto;
+  }
+}
+
+.data-table {
+  flex: 1 1 auto;
+  background: #fff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03),
+    0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+  overflow: hidden;
+  min-height: 0;
+
+  // Allow table cells to expand beyond initial width based on content
+  ::ng-deep .ant-table-cell {
+    word-break: break-word !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+  }
+
+  // Allow links and text inside cells to wrap
+  ::ng-deep .ant-table-cell a,
+  ::ng-deep .ant-table-cell span {
+    word-break: break-word !important;
+    overflow: visible !important;
+  }
+}
+
+:host ::ng-deep .data-table .ant-table-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+:host ::ng-deep .data-table .ant-table-container {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+:host ::ng-deep .data-table .ant-table-content {
+  overflow-x: auto;
+}
+
+:host ::ng-deep .data-table .ant-table-tbody > tr > td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:host ::ng-deep .data-table .ant-table-body {
+  padding-bottom: 0;
+  overflow: auto;
+  max-height: none;
+}
+
+@media (max-width: 768px) {
+  .unload-point-scroll-wrapper {
+    overflow-x: hidden;
+  }
+
+  :host ::ng-deep .ant-page-header-heading-extra {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .search-group {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .search-group .search-input {
+    flex: 1;
+  }
+
+  .action-group {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-group button {
+    width: 100%;
+    justify-content: center !important;
+  }
+
+  :host ::ng-deep .data-table .ant-table-wrapper {
+    height: auto;
+  }
+
+  :host ::ng-deep .data-table .ant-table-container,
+  :host ::ng-deep .data-table .ant-table-content {
+    height: auto;
+  }
+
+  :host ::ng-deep .data-table .ant-table-thead > tr > th,
+  :host ::ng-deep .data-table .ant-table-tbody > tr > td {
+    padding: 8px 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* Remove border/background from prev/next pagination buttons */
+:host ::ng-deep .ant-pagination-prev,
+:host ::ng-deep .ant-pagination-next {
+  button {
+    border: none !important;
+    background: transparent !important;
+    color: rgba(0, 0, 0, 0.65) !important;
+    padding: 4px 8px !important;
+    height: auto !important;
+    width: auto !important;
+    min-width: unset !important;
+    justify-content: unset !important;
+
+    &:hover {
+      color: #1890ff !important;
+      background: transparent !important;
+      border: none !important;
+    }
+  }
+
+  .ant-pagination-item-link {
+    border: none !important;
+    background: transparent !important;
+    color: rgba(0, 0, 0, 0.65) !important;
+  }
+
+  &:hover .ant-pagination-item-link {
+    color: #1890ff !important;
+    border: none !important;
+  }
+}
+
+/* Alternative approach: target via pagination-spacing class */
+::ng-deep .pagination-spacing .ant-pagination-prev button,
+::ng-deep .pagination-spacing .ant-pagination-next button,
+::ng-deep .pagination-spacing .ant-pagination-prev .ant-pagination-item-link,
+::ng-deep .pagination-spacing .ant-pagination-next .ant-pagination-item-link {
+  border: none !important;
+  background: transparent !important;
+  color: rgba(0, 0, 0, 0.65) !important;
+  padding: 4px 8px !important;
+  height: auto !important;
+  width: auto !important;
+  min-width: unset !important;
+  justify-content: unset !important;
+}
+
+::ng-deep .pagination-spacing .ant-pagination-prev button:hover,
+::ng-deep .pagination-spacing .ant-pagination-next button:hover,
+::ng-deep
+  .pagination-spacing
+  .ant-pagination-prev:hover
+  .ant-pagination-item-link,
+::ng-deep
+  .pagination-spacing
+  .ant-pagination-next:hover
+  .ant-pagination-item-link {
+  color: #1890ff !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Ngăn pagination xuống dòng */
+::ng-deep .pagination-spacing {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  overflow-x: auto !important; /* Cho phép scroll ngang nếu quá dài */
+  white-space: nowrap !important;
+}
+
+::ng-deep .pagination-spacing .ant-pagination {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+}
+
+/* Giảm khoảng cách giữa các items */
+::ng-deep .pagination-spacing .ant-pagination-item,
+::ng-deep .pagination-spacing .ant-pagination-prev,
+::ng-deep .pagination-spacing .ant-pagination-next,
+::ng-deep .pagination-spacing .ant-pagination-jump-prev,
+::ng-deep .pagination-spacing .ant-pagination-jump-next {
+  margin: 0 2px !important; /* Giảm margin */
+  min-width: 28px !important; /* Giảm width tối thiểu */
+}
+
+/* Giảm kích thước font và padding cho mobile */
+@media (max-width: 767px) {
+  ::ng-deep .pagination-spacing .ant-pagination-item,
+  ::ng-deep .pagination-spacing .ant-pagination-prev,
+  ::ng-deep .pagination-spacing .ant-pagination-next {
+    font-size: 12px !important;
+    padding: 0 4px !important;
+    min-width: 24px !important;
+    height: 24px !important;
+    line-height: 22px !important;
+  }
+  
+  ::ng-deep .pagination-spacing .ant-pagination-item a {
+    padding: 0 4px !important;
+  }
+  
+  /* Giảm kích thước dropdown page size */
+  ::ng-deep .pagination-spacing .ant-pagination-options {
+    margin-left: 4px !important;
+  }
+  
+  ::ng-deep .pagination-spacing .ant-select-selector {
+    font-size: 12px !important;
+    padding: 0 4px !important;
+    height: 24px !important;
+  }
+}
+
+/* Alternative approach: target via pagination-spacing class */
+::ng-deep .pagination-spacing .ant-pagination-prev button,
+::ng-deep .pagination-spacing .ant-pagination-next button,
+::ng-deep .pagination-spacing .ant-pagination-prev .ant-pagination-item-link,
+::ng-deep .pagination-spacing .ant-pagination-next .ant-pagination-item-link {
+  border: none !important;
+  background: transparent !important;
+  color: rgba(0, 0, 0, 0.65) !important;
+  padding: 4px 8px !important;
+  height: auto !important;
+  width: auto !important;
+  min-width: unset !important;
+  justify-content: unset !important;
+}
+
+::ng-deep .pagination-spacing .ant-pagination-prev button:hover,
+::ng-deep .pagination-spacing .ant-pagination-next button:hover,
+::ng-deep .pagination-spacing .ant-pagination-prev:hover .ant-pagination-item-link,
+::ng-deep .pagination-spacing .ant-pagination-next:hover .ant-pagination-item-link {
+  color: #1890ff !important;
+  background: transparent !important;
+  border: none !important;
+}

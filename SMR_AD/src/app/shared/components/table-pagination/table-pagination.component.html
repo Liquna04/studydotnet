@@ -1,0 +1,51 @@
+<div class="table-pagination">
+  <div class="pagination-info" *ngIf="showTotal">
+    <span>Tổng số {{ total }} mục</span>
+  </div>
+
+  <div class="pagination-controls">
+    <!-- Page navigation buttons -->
+    <div class="page-buttons">
+      <button
+        nz-button
+        nzType="default"
+        nzSize="small"
+        [disabled]="!canGoPrevious"
+        (click)="onPreviousPage()"
+        class="nav-btn"
+      >
+        <span nz-icon nzType="left"></span>
+      </button>
+
+      <span class="page-info">{{ pageIndex }}</span>
+
+      <button
+        nz-button
+        nzType="default"
+        nzSize="small"
+        [disabled]="!canGoNext"
+        (click)="onNextPage()"
+        class="nav-btn"
+      >
+        <span nz-icon nzType="right"></span>
+      </button>
+    </div>
+
+    <!-- Page size selector -->
+    <div class="page-size-selector" *ngIf="showSizeChanger">
+      <nz-select
+        [(ngModel)]="pageSize"
+        (ngModelChange)="onPageSizeChange($event)"
+        nzSize="small"
+        class="size-select"
+      >
+        <nz-option
+          *ngFor="let size of pageSizeOptions"
+          [nzValue]="size"
+          [nzLabel]="size + ' / page'"
+        >
+        </nz-option>
+      </nz-select>
+    </div>
+  </div>
+</div>

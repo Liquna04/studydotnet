@@ -1,0 +1,178 @@
+.btn_success {
+  margin-left: 6px;
+  background-color: #28a745;
+  border: 1px solid #28a745;
+  color: #ffffff;
+}
+.btn_warning {
+  background-color: #28a745;
+  border: 1px solid #28a745;
+  color: #ffffff;
+}
+
+.node_icon {
+  color: #ff4d4f;
+  z-index: 10;
+}
+.icon-tree {
+  font-size: 10px;
+}
+
+/* Align the action icons (plus / delete) in the tree rows so they are
+   always on the same line and vertically centered, matching menu list */
+.note_title {
+  display: flex;
+  align-items: center; /* ensure title and actions align vertically */
+  gap: 8px;
+
+  /* left part (title) should take remaining space and allow wrapping */
+  .flex-1 {
+    flex: 1 1 auto;
+    min-width: 0; /* allow text to ellipsis or wrap inside flex item */
+    word-break: break-word;
+  }
+
+  /* action container on the right */
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+  }
+
+  /* ensure icons have consistent sizing and are centered like menu list */
+  span[nz-icon] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    font-size: 16px; /* match other lists */
+    cursor: pointer;
+  }
+
+  /* make delete icon visually separated and red when present */
+  span[nz-icon][nztype="delete" i],
+  span[nz-icon][nzType="delete"] {
+    color: #ff4d4f; /* consistent danger color */
+  }
+}
+
+// Header responsive styles
+:host {
+  display: block;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.search-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-grow: 1;
+  min-width: 300px;
+}
+
+.search-group .search-input {
+  flex: 1;
+}
+
+.search-buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.action-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Ensure button content is centered even when utility classes force flex alignment */
+.action-group button {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+
+.action-group button span,
+.action-group button nz-icon,
+.action-group button i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-buttons .gray-btn,
+.button-group .gray-btn {
+  background: #f5f6f8;
+  border: 1px solid #d9d9d9;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+:host ::ng-deep .ant-page-header-heading {
+  flex-wrap: wrap;
+}
+
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+  :host ::ng-deep .ant-page-header-heading-extra {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .action-group {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .action-group button {
+    flex: 1 1 0;
+    width: auto;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  :host ::ng-deep .ant-page-header-heading-extra {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .search-group {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .action-group {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-group button {
+    width: 100%;
+    justify-content: center !important;
+  }
+}

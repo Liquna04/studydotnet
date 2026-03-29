@@ -1,0 +1,1378 @@
+@use "sass:map" as map;
+@use "./styles/_variables.scss" as vars;
+@use "./styles/_mixins.scss" as mixins;
+@import url("https://fonts.googleapis.com/css2?family=REM:wght@400;600;700&family=Hubot+Sans:wght@400;600;700&family=Inclusive+Sans:wght@400;600;700&family=Google+Sans+Code:wght@400;600;700&family=Inria+Sans:wght@400;600;700&family=Inter:wght@400;600;700&family=Be+Vietnam+Pro:wght@400;600;700&family=Roboto:wght@400;700&display=swap");
+
+// NOTE: This project now prefers 'GitLab Sans' as the global UI font.
+// Make sure 'GitLab Sans' is available in your build (self-hosted, local assets
+// or via an @import). If you don't host the font, browsers will fall back to
+// the next fonts declared in the stack. Example to import from a CDN:
+// @import url('https://cdn.example.com/fonts/gitlab-sans.css');
+
+// Global app font: prefer Be Vietnam Pro for main UI. Individual components
+// (login, sidebar brand) keep their own font-family where explicitly set.
+/* Ensure Roboto Slab is the primary UI font. Falls back to project fonts if unavailable. */
+// (Roboto Slab loaded above via Google Fonts)
+$font-stack: "Roboto", Arial, Tahoma, sans-serif;
+
+body {
+  font-family: $font-stack, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+// --------------------------------------------------
+// Global: make all table header cells bold (keep body cells normal)
+// Applies to native <table> and Ant Design tables used by ng-zorro
+// --------------------------------------------------
+table thead th,
+.ant-table-thead th,
+.ant-table thead th {
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+}
+.ant-input {
+  height: 40px;
+  padding: 5.5px 12px;
+  font-size: 14px;
+  line-height: 1;
+  transition: all 0.3s;
+
+  &:disabled {
+    background-color: #ffffff !important;
+    cursor: not-allowed;
+  }
+}
+.ant-select-single:not(.ant-select-customize-input) .ant-select-selector .ant-select-selection-search-input{
+  height: 40px;
+}
+.ant-select-single .ant-select-selector .ant-select-selection-item, .ant-select-single .ant-select-selector .ant-select-selection-placeholder{
+  line-height : 33px !important;
+}
+
+/* Override disabled styles for all Ant Design components */
+.ant-input-disabled,
+.ant-input:disabled,
+.ant-select-disabled .ant-select-selector,
+.ant-picker-disabled .ant-picker-input,
+.ant-picker-disabled,
+.ant-select-disabled {
+  background-color: #ffffff !important;
+  color: #8c8c8c !important;
+}
+
+/* Force white background for ng-zorro disabled components */
+nz-select[disabled],
+nz-select[disabled] .ant-select-selector,
+nz-date-picker[disabled],
+nz-date-picker[disabled] .ant-picker-input {
+  background-color: #ffffff !important;
+}
+.ant-menu {
+  color: #000000;
+}
+
+button,
+.ant-btn {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  gap: 0px !important;
+
+  cursor: pointer;
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+.ant-table tfoot > tr > td,
+.ant-table tfoot > tr > th,
+.ant-table-tbody > tr > td,
+.ant-table-thead > tr > th {
+  position: relative;
+  padding: 10px 10px;
+  overflow-wrap: break-word;
+}
+.ant-btn > .anticon + span,
+.ant-btn > span + .anticon {
+  margin-left: 0px !important;
+}
+
+/*
+  Icon-only buttons (delete buttons in item rows):
+  - remove border/background so they look like an icon action
+  - keep accessible padding and center the icon
+  - make overflow visible so icons are not clipped
+*/
+.icon-only,
+button.icon-only,
+[nz-button].icon-only,
+.ant-btn.icon-only {
+  /* Remove visual chrome - ALL STATES */
+  border: none !important;
+  border-color: transparent !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+
+  /* Size & alignment */
+  padding: 4px 6px !important;
+  min-width: 0 !important;
+  width: auto !important;
+  height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+}
+
+/* Force removal of all borders in ALL STATES for icon-only buttons */
+.icon-only:hover,
+button.icon-only:hover,
+[nz-button].icon-only:hover,
+.ant-btn.icon-only:hover,
+.icon-only:focus,
+button.icon-only:focus,
+[nz-button].icon-only:focus,
+.ant-btn.icon-only:focus,
+.icon-only:active,
+button.icon-only:active,
+[nz-button].icon-only:active,
+.ant-btn.icon-only:active,
+.icon-only:focus-visible,
+button.icon-only:focus-visible,
+.ant-btn.icon-only:focus-visible {
+  border: none !important;
+  border-color: transparent !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Hover effect for icon-only buttons: add subtle background and scale */
+.icon-only:hover,
+button.icon-only:hover,
+[nz-button].icon-only:hover,
+.ant-btn.icon-only:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+  border-radius: 4px !important;
+  transition: all 0.2s ease !important;
+  transform: scale(1.05) !important;
+}
+
+/* Active/pressed state */
+.icon-only:active,
+button.icon-only:active,
+[nz-button].icon-only:active,
+.ant-btn.icon-only:active {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+  transform: scale(0.95) !important;
+}
+
+/* Focus state - outline with subtle glow */
+.icon-only:focus,
+button.icon-only:focus,
+[nz-button].icon-only:focus,
+.ant-btn.icon-only:focus,
+.icon-only:focus-visible,
+button.icon-only:focus-visible,
+.ant-btn.icon-only:focus-visible {
+  outline: 2px solid rgba(24, 144, 255, 0.2) !important;
+  outline-offset: 2px !important;
+}
+
+/* Extra specificity: handle ALL button types (default, danger, text) with icon-only class */
+.ant-btn.icon-only,
+.ant-btn.icon-only.ant-btn-dangerous,
+.ant-btn.icon-only.ant-btn-default,
+.ant-btn.icon-only[nztype="text"],
+.ant-btn.icon-only[nztype="default"],
+button.icon-only.ant-btn-dangerous,
+button.icon-only.ant-btn-default,
+button.icon-only[nztype="text"],
+button.icon-only[nztype="default"],
+.icon-only.ant-btn-dangerous,
+.icon-only.ant-btn-default {
+  border: none !important;
+  border-color: transparent !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* If the component uses nzType="text" combined with danger, it may still set a border via outline rules */
+.ant-btn.icon-only[nztype="text"],
+.ant-btn.icon-only.ant-btn-dangerous[nztype="text"] {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Ensure the nz-icon inside an icon-only button is not cropped */
+button.icon-only nz-icon,
+.icon-only nz-icon {
+  font-size: 16px !important;
+  line-height: 1 !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+}
+
+/* Fix for the 'Đã thêm' pill: prevent icon clipping and align icon/text */
+.added-pill {
+  overflow: visible !important;
+  padding: 4px 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  height: auto !important;
+  min-height: 28px !important;
+}
+
+.added-pill nz-icon {
+  font-size: 16px !important;
+  line-height: 1 !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+}
+
+/* Center the action column (the '#' column) contents in the order screens
+   so icon-only buttons sit exactly in the middle of the cell. Scope to
+   .order-create-container to avoid affecting other tables. */
+.order-create-container {
+  /* native plain table used in order components */
+  .plain-items-table table {
+    th:last-child,
+    td:last-child {
+      text-align: center;
+      vertical-align: middle;
+      /* ensure cell contents use flex centering when necessary */
+      display: table-cell;
+    }
+    td:last-child > button.icon-only,
+    td:last-child > .ant-btn.icon-only {
+      margin: 0 auto !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+  }
+
+  /* ng-zorro/Ant table variant used in modals */
+  .ant-table {
+    .ant-table-thead th:last-child,
+    .ant-table-tbody td:last-child {
+      text-align: center !important;
+      vertical-align: middle !important;
+    }
+
+    .ant-table-tbody td:last-child > button.icon-only,
+    .ant-table-tbody td:last-child > .ant-btn.icon-only {
+      margin: 0 auto !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+  }
+}
+
+// style cho các nút
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap; // Tự động xuống hàng nếu màn hình nhỏ
+}
+
+.search-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-input {
+  width: 250px; // Hoặc điều chỉnh theo ý bạn
+  min-width: 200px;
+}
+
+.search-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.action-group {
+  display: flex;
+  gap: 8px;
+  margin-left: auto; // Đẩy sang bên phải (tùy chọn)
+}
+.ant-form-item {
+  margin-top: 0px !important;
+}
+
+// Style cho các button
+.gray-btn {
+  background-color: #f5f5f5;
+  border-color: #d9d9d9;
+
+  &:hover {
+    background-color: #e6e6e6;
+    border-color: #bfbfbf;
+  }
+}
+
+.account-inline {
+  margin-top: 5px;
+  color: #1890ff !important;
+}
+
+// Phân trang //
+
+::ng-deep .ant-pagination {
+  .ant-pagination-item-active {
+    background-color: #1890ff;
+    border-color: #1890ff;
+
+    a {
+      color: #fff;
+    }
+  }
+
+  .ant-pagination-item {
+    border-radius: 2px;
+
+    &:hover {
+      border-color: #1890ff;
+
+      a {
+        color: #1890ff;
+      }
+    }
+  }
+}
+
+/* Remove border/background from prev/next buttons - using .pagination-spacing scope */
+.pagination-spacing ::ng-deep .ant-pagination-prev,
+.pagination-spacing ::ng-deep .ant-pagination-next {
+  & button {
+    border: none !important;
+    background: transparent !important;
+    color: rgba(0, 0, 0, 0.65) !important;
+    padding: 0 !important;
+    height: auto !important;
+    width: auto !important;
+    min-width: unset !important;
+    justify-content: unset !important;
+  }
+
+  .ant-pagination-item-link {
+    border: none !important;
+    background: transparent !important;
+    color: rgba(0, 0, 0, 0.65) !important;
+    padding: 0 !important;
+    height: auto !important;
+    width: auto !important;
+  }
+
+  &:hover button,
+  &:hover .ant-pagination-item-link {
+    color: #1890ff !important;
+    background: transparent !important;
+    border: none !important;
+  }
+}
+.pagination-spacing {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Override default truncation for customer-fullname cells to show full text with wrapping */
+:host ::ng-deep td.customer-fullname {
+  white-space: normal !important;
+  text-overflow: unset !important;
+  overflow: visible !important;
+  word-break: break-word;
+}
+.ant-pagination-next .ant-pagination-item-link,
+.ant-pagination-prev .ant-pagination-item-link {
+  min-height: 30px !important;
+}
+
+.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Pagination-specific select sizing: only affect page-size selects inside components
+   that use the .pagination-spacing class. This avoids changing select sizing globally. */
+.pagination-spacing
+  .ant-select-single:not(.ant-select-customize-input)
+  .ant-select-selector {
+  height: 30px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Pagination quick jumper input (Đến ... trang) */
+.pagination-spacing .ant-pagination-options-quick-jumper input {
+  height: 30px !important;
+}
+
+/* Responsive pagination on mobile */
+@media (max-width: 768px) {
+  .pagination-spacing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 0 10px;
+    text-align: center !important;
+  }
+
+  .pagination-spacing {
+    font-size: 12px;
+  }
+
+  /* Navigation row (prev/next/numbers) - nằm giữa, không wrap, chỉ 1 dòng */
+  .pagination-spacing .ant-pagination {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    order: 1;
+    gap: 8px !important;
+    padding: 12px 8px !important;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    min-height: 38px;
+  }
+
+  /* Hide options inside pagination to move it to separate row */
+  .pagination-spacing .ant-pagination .ant-pagination-options {
+    display: none !important;
+  }
+
+  .pagination-spacing .ant-pagination-prev,
+  .pagination-spacing .ant-pagination-next,
+  .pagination-spacing .ant-pagination-item,
+  .pagination-spacing .ant-pagination-item-link {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0 !important;
+    margin: 4px 4px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Controls row (page size dropdown + quick jumper) - nằm dưới nav với khoảng cách */
+  .pagination-spacing .ant-pagination-options {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap !important;
+    width: 100%;
+    order: 2;
+    gap: 12px;
+    padding: 12px 0 !important;
+    font-size: 12px;
+  }
+
+  .pagination-spacing .ant-pagination-options-quick-jumper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .pagination-spacing .ant-pagination-options-quick-jumper input {
+    min-width: 40px;
+  }
+
+  .pagination-spacing .ant-select {
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+
+  .pagination-spacing
+    nz-select-item.ant-select-selection-item.ng-star-inserted {
+    font-size: 12px !important;
+  }
+}
+
+// End phân trang
+
+// Responsive cho mobile
+@media (max-width: 768px) {
+  .header-actions {
+    // --------------------------------------------------
+    // Unified confirmation modal content (Role-style)
+    // Applies to templates using `.confirm-row`, `.confirm-title`, `.confirm-actions`
+    // --------------------------------------------------
+    .confirm-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: nowrap;
+    }
+
+    .confirm-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      flex-shrink: 1;
+      min-width: 0;
+    }
+
+    .confirm-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .confirm-actions button {
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .warning-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-group,
+  .action-group {
+    width: 100%;
+  }
+
+  .search-input {
+    flex: 1;
+    width: 100%;
+  }
+
+  .action-group {
+    margin-left: 0;
+  }
+}
+// end style 4 botton
+
+/* Keep regular cell text weight for tbody */
+
+// --------------------------------------------------
+// Khai báo biến CSS từ biến SCSS để dùng trong component
+// --------------------------------------------------
+:root {
+  --color-primary: #{vars.$color-primary};
+  --color-primary-dark: #{vars.$color-primary-dark};
+  --color-accent: #{vars.$color-accent};
+  --color-accent-light: #{vars.$color-accent-light};
+  --color-white: #{vars.$color-white};
+  --color-gray-light: #{vars.$color-gray-light};
+  --color-gray-medium: #{vars.$color-gray-medium};
+  --color-text-primary: #{vars.$color-text-primary};
+  --color-text-secondary: #{vars.$color-text-secondary};
+  --color-text-muted: #{vars.$color-text-muted};
+  --color-text-description: #{vars.$color-text-description};
+  --color-blue-light: #{vars.$color-blue-light};
+  --color-border: #{vars.$color-border};
+  --radius-sm: #{vars.$radius-sm};
+  --radius-md: #{vars.$radius-md};
+  --radius-lg: #{vars.$radius-lg};
+  --shadow-card: #{vars.$shadow-card};
+  --shadow-hover: #{vars.$shadow-hover};
+  // --------------------------------------------------
+  // breakpoints
+  // --------------------------------------------------
+  // Khai báo biến CSS từ biến SCSS để dùng trong component
+  // --------------------------------------------------
+  :root {
+    --color-primary: #{vars.$color-primary};
+    --color-primary-dark: #{vars.$color-primary-dark};
+    --color-accent: #{vars.$color-accent};
+    --color-accent-light: #{vars.$color-accent-light};
+    --color-white: #{vars.$color-white};
+    --color-gray-light: #{vars.$color-gray-light};
+    --color-gray-medium: #{vars.$color-gray-medium};
+    --color-text-primary: #{vars.$color-text-primary};
+    --color-text-secondary: #{vars.$color-text-secondary};
+    --color-text-muted: #{vars.$color-text-muted};
+    --color-text-description: #{vars.$color-text-description};
+    --color-blue-light: #{vars.$color-blue-light};
+    --color-border: #{vars.$color-border};
+    --radius-sm: #{vars.$radius-sm};
+    --radius-md: #{vars.$radius-md};
+    --radius-lg: #{vars.$radius-lg};
+    --shadow-card: #{vars.$shadow-card};
+    --shadow-hover: #{vars.$shadow-hover};
+    /* breakpoints */
+    --bp-sm: #{map.get(vars.$breakpoints, sm)};
+    --bp-md: #{map.get(vars.$breakpoints, md)};
+    --bp-lg: #{map.get(vars.$breakpoints, lg)};
+    --bp-xl: #{map.get(vars.$breakpoints, xl)};
+  }
+
+  // --------------------------------------------------
+  // Main content area
+  // --------------------------------------------------
+  /*
+   * Main content utility
+   * - Avoid fixed viewport calcs that cause clipping and double scrollbars
+   * - Use flex so inner table body can scroll and pagination stays visible
+   */
+  .main-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0; /* critical to allow inner scroll containers to size */
+    overflow: hidden; /* let inner regions decide their own scroll */
+    padding: 0;
+  }
+
+  /* A standardized container pattern for list pages with data table + pagination */
+  .content-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  /* Safe bottom padding to ensure pagination is never clipped */
+  .content-padding-bottom {
+    padding-bottom: 24px !important;
+  }
+
+  // --------------------------------------------------
+  // Footer chứa nút và thông tin nhỏ ở dưới cùng
+  // --------------------------------------------------
+  .footer-content {
+    height: 56px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    background: white;
+    padding: 0 16px 4px 0px;
+  }
+
+  // --------------------------------------------------
+  // Tiêu đề trang trong Ant Design
+  // --------------------------------------------------
+  .ant-page-header-heading {
+    margin: 0px 0px 0px 0px;
+  }
+
+  // --------------------------------------------------
+  // Tiện ích flex cơ bản
+  // --------------------------------------------------
+  .flex {
+    display: flex;
+  }
+
+  // --------------------------------------------------
+  // Khoảng cách: căn đều 2 phía
+  // --------------------------------------------------
+  .justify-between {
+    justify-content: space-between;
+  }
+
+  // --------------------------------------------------
+  // Nút xám dùng chung
+  // --------------------------------------------------
+  .gray-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa !important;
+    border-color: #dee2e6 !important;
+    color: #000000 !important;
+    padding: 8px;
+  }
+
+  // Clickable code-like links in tables (e.g., Mã fields)
+  .code-link,
+  .customer-cell a,
+  td a {
+    color: #1890ff !important;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .code-link:hover,
+  .customer-cell a:hover,
+  td a:hover {
+    text-decoration: underline;
+  }
+
+  // --------------------------------------------------
+  // Khoảng cách giữa các nút
+  // --------------------------------------------------
+  .space-btn {
+    margin-left: 6px;
+  }
+
+  // --------------------------------------------------
+  // Vùng upload avatar
+  // --------------------------------------------------
+  .upload-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 128px;
+    width: 128px;
+    text-align: center;
+    background: #f5f5f5;
+    border: 1px dashed gray;
+    cursor: pointer;
+    margin: 6px 12px 0px 0px;
+    flex-flow: column;
+  }
+
+  // --------------------------------------------------
+  // Hover cho avatar
+  // --------------------------------------------------
+  .upload-avatar:hover {
+    border: 1px dashed hsl(209, 100%, 55%);
+    color: hsl(209, 100%, 55%);
+  }
+
+  // --------------------------------------------------
+  // Container chính cho upload
+  // --------------------------------------------------
+  .main-upload {
+    display: flex;
+    align-items: center;
+  }
+
+  // --------------------------------------------------
+  // Xem trước avatar
+  // --------------------------------------------------
+  .avatar-preview {
+    margin: 6px 12px 0px 0px;
+  }
+
+  // --------------------------------------------------
+  // Pagination trong bảng
+  // --------------------------------------------------
+  .paging-table {
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    background-color: white;
+  }
+
+  // --------------------------------------------------
+  // Mục trong drawer
+  // --------------------------------------------------
+  .drawer-item {
+    margin-bottom: 12px;
+  }
+
+  // --------------------------------------------------
+  // Nhãn trong drawer
+  // --------------------------------------------------
+  .drawer-item label {
+    margin-left: 6px;
+  }
+
+  // --------------------------------------------------
+  // Input trong drawer
+  // --------------------------------------------------
+  .drawer-item input {
+    margin-top: 6px;
+  }
+
+  // --------------------------------------------------
+  // Select trong drawer chiếm 100% chiều rộng
+  // --------------------------------------------------
+  .drawer-item nz-select {
+    width: 100%;
+    margin-top: 6px;
+  }
+
+  // --------------------------------------------------
+  // Input trong drawer
+  // --------------------------------------------------
+  .drawer-item input {
+    margin-top: 6px;
+  }
+
+  // --------------------------------------------------
+  // Select trong drawer chiếm 100% chiều rộng
+  // --------------------------------------------------
+  .drawer-item nz-select {
+    width: 100%;
+    margin-top: 6px;
+  }
+}
+
+/* Ensure Ant Tabs never show the little overflow 'more' dropdown; prefer horizontal scroll */
+.ant-tabs-nav-more {
+  display: none !important;
+}
+/* Allow tab headers to wrap to multiple lines when space is insufficient */
+.ant-tabs-nav-wrap {
+  overflow: visible !important;
+}
+.ant-tabs-nav-list {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px 8px; /* space between tabs */
+  align-content: flex-start; /* ensure wrapped lines start at the top */
+}
+.ant-tabs-tab {
+  flex: 0 0 auto !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Replace Ant's ink-bar with a per-tab underline so wrapping works correctly */
+.ant-tabs-ink-bar {
+  display: none !important;
+}
+
+/* Add underline to active tab itself so it's always under the active tab's line */
+.ant-tabs-nav .ant-tabs-tab {
+  position: relative;
+}
+.ant-tabs-nav .ant-tabs-tab.ant-tabs-tab-active::after {
+  content: "";
+  position: absolute;
+  left: 8px; /* align slightly inset to match Ant padding */
+  right: 8px;
+  bottom: -6px; /* adjust so underline sits on the nav bottom */
+  height: 3px;
+  background: #1890ff;
+  border-radius: 2px;
+}
+
+/* Make sure the underline doesn't overlap content when tabs have extra bottom spacing */
+.ant-tabs-nav {
+  padding-bottom: 8px;
+}
+
+/* Force nav/list to align to the left edge and remove built-in offsets */
+.ant-tabs-nav,
+.ant-tabs-nav-wrap,
+.ant-tabs-nav-list {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+/* Ensure the nav container aligns wrapped lines at the start (left) */
+.ant-tabs-nav-list {
+  align-items: flex-start !important;
+  align-content: flex-start !important;
+}
+
+/* Apply a small negative margin to the nav-list to cancel default left offsets and keep wrapped lines flush */
+.ant-tabs-nav-list {
+  margin-left: -8px !important;
+}
+.ant-tabs-nav-list .ant-tabs-tab {
+  padding-left: 8px !important; /* restore visual gap per-tab */
+}
+
+// --------------------------------------------------
+// Global button styles (GitLab-like) - applies to native buttons and Ant Design .ant-btn
+// - modern rounded shape, clear primary / secondary / danger variants
+// - consistent padding, font-size, elevation and hover states
+// --------------------------------------------------
+button,
+.ant-btn {
+  border-radius: 2px !important;
+  padding: 8px 12px !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  height: auto !important;
+  box-shadow: none !important;
+  transition: background-color 0.15s ease, transform 0.06s ease,
+    box-shadow 0.12s ease !important;
+}
+
+/* Primary */
+button.primary,
+.ant-btn-primary,
+button.ant-btn-primary {
+  background-color: var(--color-primary) !important;
+  color: var(--color-white) !important;
+  border-color: transparent !important;
+}
+button.primary:hover,
+.ant-btn-primary:hover,
+button.ant-btn-primary:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+
+/* Secondary / default */
+button.secondary,
+.ant-btn-default,
+button.ant-btn-default,
+button:not(.primary):not(.danger) {
+  background-color: #ffffff !important;
+  color: var(--color-text-primary) !important;
+  border: 1px solid var(--color-border) !important;
+}
+button.secondary:hover,
+.ant-btn-default:hover,
+button.ant-btn-default:hover {
+  background: #f5f7fa !important;
+}
+
+/* Danger */
+button.danger,
+.ant-btn-danger,
+button.ant-btn-danger {
+  background-color: #d73a49 !important; /* gitlab danger-ish */
+  color: #fff !important;
+  border-color: transparent !important;
+}
+
+/* Disabled */
+button:disabled,
+.ant-btn[disabled] {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+/* Small / compact */
+.ant-btn-small,
+button.small {
+  padding: 4px 8px !important;
+  min-height: 28px !important;
+  font-size: 13px !important;
+}
+
+/* Icon spacing inside buttons */
+.ant-btn .anticon,
+button .anticon,
+button img {
+  display: inline-flex;
+  margin-right: 6px;
+}
+
+/* Outline variant helper */
+.btn-outline {
+  background: transparent !important;
+  border: 1px solid var(--color-border) !important;
+  color: var(--color-text-primary) !important;
+}
+
+// --------------------------------------------------
+// Icon-only buttons: override padding and use flex to center the icon
+// --------------------------------------------------
+.ant-btn-icon-only {
+  padding: 0 !important;
+  width: 36px !important;
+  height: 32px !important;
+  justify-content: center !important;
+  gap: 0 !important;
+}
+
+.ant-btn-icon-only .anticon,
+.ant-btn-icon-only i,
+.ant-btn-icon-only span {
+  margin-right: 0 !important; // Remove spacing for single icons
+}
+
+// --------------------------------------------------
+// Global Header Actions styling for system management screens
+// --------------------------------------------------
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+
+  .search-input {
+    flex: 1 1 auto; // Allow search input to grow and fill available space
+  }
+
+  .button-group {
+    display: flex;
+    flex: 0 0 auto; // Prevent button group from growing or shrinking
+    gap: 8px;
+  }
+
+  // Responsive: keep search-input and button-group always aligned horizontally
+  // When they can't align with title, they fill full width together
+  @media (max-width: 1024px) {
+    // At medium screens, ensure they fill available space but stay horizontal
+    width: 100%;
+    justify-content: space-between;
+
+    .search-input {
+      flex: 1 1 auto;
+      min-width: 200px; // Minimum width for usability
+    }
+
+    .button-group {
+      flex: 0 0 auto;
+    }
+  }
+
+  @media (max-width: 768px) {
+    // At very small screens, still keep horizontal but adjust spacing
+    gap: 4px;
+
+    .search-input {
+      min-width: 150px;
+    }
+
+    .button-group {
+      gap: 4px;
+
+      button {
+        padding: 6px 8px !important; // Slightly smaller buttons
+      }
+    }
+  }
+}
+
+/* Base layout for create/edit/view header actions (applies to all widths) */
+.order-header-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* default two per row */
+  gap: 8px;
+  width: 100%;
+}
+.order-header-actions .action-item,
+.order-header-actions button {
+  width: 100%;
+}
+.order-header-actions .action-item button,
+.order-header-actions > button {
+  width: 100%;
+  justify-content: center !important;
+}
+/* single-action blocks span full row */
+.order-header-actions .action-item.single {
+  grid-column: 1 / -1;
+}
+/* optional helper when you want a single column explicitly */
+.order-header-actions.order-header-single {
+  grid-template-columns: 1fr;
+}
+
+/* Responsive rule for Order Create and Return Create pages
+   When viewport is 768px or narrower, stack the two columns (ant-col)
+   and make boxed columns fill full width. This keeps behavior consistent
+   for both `order-create` and `return-create` components. */
+@media (max-width: 768px) {
+  .order-create-container {
+    // Target the Ant Design column wrappers inside the container
+    [nz-row] {
+      display: block; // turn row into stacked block on small screens
+    }
+
+    // Make each ant-col (nz-col) behave as full-width block
+    .ant-col,
+    [nz-col] {
+      width: 100% !important;
+      max-width: 100% !important;
+      flex: 0 0 100% !important;
+      display: block !important;
+    }
+
+    // Make the boxed columns fill container width
+    .col-box {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Add vertical spacing between stacked columns */
+    [nz-row] > .ant-col,
+    [nz-row] > [nz-col] {
+      margin-bottom: 12px;
+    }
+    [nz-row] > .ant-col:last-child,
+    [nz-row] > [nz-col]:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  /* Ensure header extra stacks and fills width on mobile */
+  .ant-page-header-heading {
+    flex-wrap: wrap;
+  }
+  .ant-page-header-heading-extra {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  /* Unified responsive rule for header buttons on create/view/edit screens */
+  .order-header-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* default: two per row */
+    gap: 8px;
+    width: 100%;
+  }
+  /* child wrappers or direct buttons stretch full width */
+  .order-header-actions .action-item,
+  .order-header-actions button {
+    width: 100%;
+  }
+  /* center button content */
+  .order-header-actions .action-item button,
+  .order-header-actions > button {
+    width: 100%;
+    justify-content: center !important;
+  }
+  /* single-action variants take full row (used in create/view modes) */
+  .order-header-actions .action-item.single {
+    grid-column: 1 / -1;
+  }
+  /* alternative: explicitly mark single-container to one column grid */
+  .order-header-actions.order-header-single {
+    grid-template-columns: 1fr;
+  }
+
+  /* Fallback for pages that use nz-space in the header extra (e.g., return-create) */
+  .ant-page-header-heading-extra nz-space {
+    display: grid;
+    grid-template-columns: 1fr; /* single button per row by default */
+    gap: 8px;
+    width: 100%;
+  }
+  .ant-page-header-heading-extra nz-space > * {
+    width: 100%;
+  }
+  .ant-page-header-heading-extra nz-space button {
+    width: 100%;
+    justify-content: center !important;
+  }
+}
+
+/* Tablet responsive: apply the same header button layout as mobile (769px–1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Ensure header extra can move below title and fill width */
+  .ant-page-header-heading {
+    flex-wrap: wrap;
+  }
+  .ant-page-header-heading-extra {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  /* Same grid rules as mobile for create/view/edit headers */
+  .order-header-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* two per row by default */
+    gap: 8px;
+    width: 100%;
+  }
+  .order-header-actions .action-item,
+  .order-header-actions button {
+    width: 100%;
+  }
+  .order-header-actions .action-item button,
+  .order-header-actions > button {
+    width: 100%;
+    justify-content: center !important;
+  }
+  .order-header-actions .action-item.single {
+    grid-column: 1 / -1; /* single button spans full row */
+  }
+  .order-header-actions.order-header-single {
+    grid-template-columns: 1fr; /* explicit single-column variant */
+  }
+
+  /* Fallback for pages that use nz-space in the header extra (e.g., return-create) */
+  .ant-page-header-heading-extra nz-space {
+    display: grid;
+    grid-template-columns: 1fr; /* one button per row */
+    gap: 8px;
+    width: 100%;
+  }
+  .ant-page-header-heading-extra nz-space > * {
+    width: 100%;
+  }
+  .ant-page-header-heading-extra nz-space button {
+    width: 100%;
+    justify-content: center !important;
+  }
+}
+
+// --------------------------------------------------
+// Table scroll containers for Order List and Return List
+// Prevents page-level horizontal scroll by containing table overflow
+// Pagination remains fixed below the scrollable area
+// --------------------------------------------------
+
+.style-data-table {
+  .ant-table-wrapper {
+    // Create horizontal scroll container for table content
+    .ant-table {
+      .confirm-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .confirm-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.85);
+      }
+
+      .confirm-actions button.ant-btn {
+        background-color: #fff !important;
+        border-color: #d9d9d9 !important;
+        color: rgba(0, 0, 0, 0.88) !important;
+        box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02) !important;
+      }
+
+      .confirm-actions button.ant-btn:hover {
+        border-color: #4096ff !important;
+        color: #4096ff !important;
+      }
+
+      /* Ensure modal body padding aligns with other create modal */
+      .ant-modal .ant-modal-body {
+        padding: 24px 32px !important;
+      }
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    // Ensure table content doesn't break container
+    .ant-table-content {
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    // Keep pagination fixed and full-width below scroll area
+    .ant-pagination {
+      margin-top: 16px;
+      overflow: visible;
+      white-space: normal;
+    }
+  }
+}
+
+// Additional fallback for any table that might cause page scroll
+.ant-table-wrapper {
+  overflow-x: auto;
+
+  .ant-table-content {
+    min-width: 100%;
+  }
+}
+
+// height table mặt hàng
+
+.plain-items-table {
+  min-height: 400px; /* Hoặc 500px, 600px tùy ý */
+}
+// end
+
+// Remove older targeted rule once new class is adopted (kept temporarily for backward compatibility)
+
+// --------------------------------------------------
+// Global: Override modal and popconfirm buttons to use default style
+// --------------------------------------------------
+// Make all modal confirm buttons look like default buttons
+.ant-modal-confirm .ant-modal-confirm-btns .ant-btn,
+.ant-popover-buttons .ant-btn {
+  background-color: #fff !important;
+  border-color: #d9d9d9 !important;
+  color: rgba(0, 0, 0, 0.88) !important;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02) !important;
+}
+
+.ant-modal-confirm .ant-modal-confirm-btns .ant-btn:hover,
+.ant-popover-buttons .ant-btn:hover {
+  border-color: #4096ff !important;
+  color: #4096ff !important;
+}
+
+// Reverse button order in modal confirm (Cancel on left, OK on right)
+.ant-modal-confirm .ant-modal-confirm-btns {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+}
+
+// --------------------------------------------------
+// Adjust modal button layout and spacing
+// --------------------------------------------------
+.ant-modal-confirm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ant-modal-confirm-title {
+  margin-bottom: 16px;
+}
+
+.ant-modal-confirm-btns {
+  display: flex;
+  gap: 12px; /* Adjust spacing between buttons */
+  justify-content: center;
+}
+
+/* đặt ở cuối src/styles.scss để override css ng-zorro */
+nz-page-header,
+.ant-page-header {
+  padding: 0px 8px !important; /* chỉnh theo ý bạn */
+}
+
+/* --------------------------------------------------
+   Global: Make delete icons red ONLY when they are the only child in button
+   This ensures only icon-only delete buttons are red, not buttons with text like "Hủy đơn hàng"
+   -------------------------------------------------- */
+button nz-icon[nzType="delete"]:only-child,
+button span[nz-icon][nzType="delete"]:only-child,
+button span[nz-icon][nztype="delete"]:only-child {
+  color: #ff4d4f !important;
+}
+
+/* Alternative selector using :has for better compatibility */
+button:has(> nz-icon[nzType="delete"]:only-child),
+button:has(> span[nz-icon][nzType="delete"]:only-child) {
+  /* Enhanced styling for icon-only delete buttons */
+  &:hover nz-icon[nzType="delete"],
+  &:hover span[nz-icon][nzType="delete"] {
+    color: #ff7875 !important; /* Lighter red on hover */
+  }
+}
+
+/* -------------------------------------------------- 
+   NOTE: Removed scroll-based dropdown hiding
+   ng-zorro dropdowns are automatically closed when clicking outside
+   -------------------------------------------------- */

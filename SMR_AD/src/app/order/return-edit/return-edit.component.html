@@ -1,0 +1,594 @@
+<nz-page-header nzBackIcon>
+  <nz-page-header-title>CHỈNH SỬA ĐƠN HÀNG</nz-page-header-title>
+  <nz-page-header-extra>
+    <div class="order-header-actions">
+      <div class="action-item">
+        <button nz-button nzType="default" (click)="onSubmit()">
+          <nz-icon nzType="save"></nz-icon>
+          Lưu thông tin
+        </button>
+      </div>
+      <div class="action-item">
+        <button nz-button nzType="default" (click)="onCopyReturn()">
+          <nz-icon nzType="copy"></nz-icon>
+          Copy đơn hàng
+        </button>
+      </div>
+      <div
+        class="action-item"
+        *ngIf="currentAccountType === 'KH' && orderStatus === '1'"
+      >
+        <button
+          nz-button
+          nzType="default"
+          nzDanger="true"
+          (click)="onSendReturn()"
+          [disabled]="isProcessing"
+          class="cancel-btn"
+        >
+          <nz-icon nzType="arrow-right"></nz-icon>
+          Gửi đơn hàng
+        </button>
+      </div>
+      <div
+        class="action-item"
+        *ngIf="currentAccountType === 'KH' && orderStatus === '1'"
+      >
+        <button
+          nz-button
+          nzType="default"
+          nzDanger="true"
+          (click)="onCancelReturn()"
+          [disabled]="isProcessing"
+          class="cancel-btn"
+        >
+          <nz-icon nzType="delete"></nz-icon>
+          Hủy đơn hàng
+        </button>
+      </div>
+    </div>
+  </nz-page-header-extra>
+
+  <nz-page-header-content>
+    <div class="Return-create-container">
+      <div nz-row [nzGutter]="16">
+        <!-- Left Column: Items Table -->
+        <div nz-col [nzSpan]="15">
+          <div class="col-box items-section">
+            <div class="items-header">
+              <button
+                nz-button
+                nzType="default"
+                (click)="addItem()"
+                style="margin-bottom: 16px"
+              >
+                <nz-icon nzType="plus"></nz-icon>
+                Thêm mặt hàng
+              </button>
+            </div>
+
+            <div class="plain-items-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 50px; white-space: nowrap">STT</th>
+                    <th style="width: 120px">MẶT HÀNG</th>
+                    <th style="width: 120px">SỐ LƯỢNG</th>
+                    <th style="width: 120px">ĐƠN VỊ TÍNH</th>
+                    <th style="width: 120px">ĐVT CƠ BẢN</th>
+                    <th style="width: 120px" *ngIf="isOutProvince">GIÁ HÀNG HÓA</th>
+                    <th style="width: 60px">#</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of ReturnItems; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ item.materialCode }} - {{ item.materialName }}</td>
+                    <td>
+                      <nz-input-number
+                        [(ngModel)]="item.returnQuantity"
+                        [nzMin]="0"
+                        [nzMax]="item.approveQuantity"
+                        [nzStep]="1"
+                        nzSize="small"
+                        style="width: 100%"
+                      >
+                      </nz-input-number>
+                    </td>
+                    <td>{{ item.unitProductName }}</td>
+                    <td>{{ item.basicUnitProductName }}</td>
+                    <td *ngIf="isOutProvince">{{ item.price | number : "1.0-0" }} đ</td>
+                    <td>
+                      <button
+                        nz-button
+                        nzType="text"
+                        nzDanger
+                        (click)="removeItem(i)"
+                        nz-tooltip="Xóa"
+                      >
+                        <nz-icon nzType="delete"></nz-icon>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div 
+        style="
+          text-align: right; 
+          font-size: 1.2em; 
+          font-weight: bold; 
+          margin-top: 16px;
+          padding-right: 76px; /* Căn lề gần giống cột Xóa */
+        " *ngIf="isOutProvince"
+      >
+        TỔNG THÀNH TIỀN: 
+        <span style="color: #d9534f; margin-left: 10px;">
+          {{ 
+            (grandApproveTotal > 0 ? grandApproveTotal : grandTotal) 
+            | number : "1.0-0" 
+            }} đ
+        </span>
+      </div>
+      <!-- Return history (separate from col-box) -->
+          <div
+            class="order-history-box"
+            style="
+              margin-top: 16px;
+              border-top: 1px solid #f0f0f0;
+              padding-top: 16px;
+            "
+          >
+            <h3 class="history-title">LỊCH SỬ ĐƠN TRẢ HÀNG</h3>
+            <div class="history-list">
+              <div class="history-item" *ngFor="let h of returnHistory">
+                <div class="history-meta">{{ h.user }} · {{ h.date }}</div>
+                <div class="history-action">
+                  <nz-tag [nzColor]="h.color">{{ h.action }}</nz-tag>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Return Form -->
+        <div nz-col [nzSpan]="9">
+          <div class="col-box">
+            <form
+              nz-form
+              nzLayout="vertical"
+              [formGroup]="ReturnForm"
+              class="order-form"
+            >
+             <nz-form-item>
+                <nz-form-label nzRequired>Loại đơn hàng</nz-form-label>
+                <nz-form-control>
+                  <nz-select
+                    formControlName="poType"
+                    nzPlaceHolder="Chọn loại đơn hàng"
+                    style="width: 100%"
+                    class="field-input"
+                  >
+                    <nz-option nzValue="IN_PROVINCE" nzLabel="Đơn hàng nội bộ"></nz-option>
+                    <nz-option nzValue="OUT_PROVINCE" nzLabel="Đơn hàng ngoại tỉnh"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+              <!-- Lý do trả hàng -->
+              <nz-form-item>
+                <nz-form-label nzRequired>Lý do trả hàng</nz-form-label>
+                <nz-form-control [nzErrorTip]="'Vui lòng chọn lý do trả hàng'">
+                  <nz-select
+                    formControlName="returnReason"
+                    nzPlaceHolder="Chọn lý do trả hàng"
+                    class="field-input"
+                  >
+                    <nz-option
+                      nzLabel="Hàng lỗi"
+                      nzValue="defective"
+                    ></nz-option>
+                    <nz-option nzLabel="Hư hỏng" nzValue="damaged"></nz-option>
+                    <nz-option
+                      nzLabel="Sai đơn"
+                      nzValue="wrong_order"
+                    ></nz-option>
+                    <nz-option
+                      nzLabel="Không đúng quy cách"
+                      nzValue="wrong_spec"
+                    ></nz-option>
+                    <nz-option
+                      nzLabel="Quá hạn sử dụng"
+                      nzValue="expired"
+                    ></nz-option>
+                    <nz-option nzLabel="Khác" nzValue="other"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+              <!-- Khách hàng -->
+              <ng-container *ngIf="(isKD || isCH) && ReturnForm.get('customerCode')?.value">
+                <nz-form-item>
+                  <nz-form-label nzRequired>Khách hàng</nz-form-label>
+                  <nz-form-control>
+                    <nz-select
+                      nzShowSearch
+                      nzAllowClear
+                      formControlName="customerCode"
+                      nzPlaceHolder="Chọn khách hàng"
+                      style="width: 100%"
+                      class="field-input"
+                    >
+                      <nz-option
+                        *ngFor="let customer of customers"
+                        [nzValue]="customer.value"
+                        [nzLabel]="customer.label"
+                      ></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </ng-container>
+
+              <ng-container *ngIf="isKH">
+                <nz-form-item>
+                  <nz-form-label nzRequired>Khách hàng</nz-form-label>
+                  <nz-form-control>
+                    <nz-select
+                      formControlName="customerCode"
+                      nzPlaceHolder="Khách hàng"
+                      style="width: 100%"
+                      class="field-input"
+                      [disabled]="true"
+                    >
+                      <nz-option
+                        *ngFor="let customer of customers"
+                        [nzValue]="customer.value"
+                        [nzLabel]="customer.label"
+                      ></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </ng-container>
+
+               <ng-container *ngIf="currentStoreName && currentStoreName !== ''">
+              <nz-form-item>
+                <nz-form-label>Cửa hàng</nz-form-label>
+                <nz-form-control>
+                  <input 
+                    nz-input 
+                    [value]="currentStoreName" 
+                    
+                    
+                    style="background-color: #f5f5f5; color: #333; font-weight: 500;"
+                    [disabled]="true"
+                  />
+                  <input 
+                    type="hidden" 
+                    formControlName="storeCode" 
+                  />
+                </nz-form-control>
+              </nz-form-item>
+            </ng-container>
+
+              <!-- Ngày đặt hàng -->
+              <nz-form-item>
+                <nz-form-label nzRequired>Ngày tạo đơn</nz-form-label>
+                <nz-form-control>
+                  <nz-date-picker
+                    formControlName="returnDate"
+                    nzPlaceHolder="Chọn ngày"
+                    style="width: 100%"
+                    class="field-input"
+                  ></nz-date-picker>
+                </nz-form-control>
+              </nz-form-item>
+
+              <!-- Ngày nhận hàng -->
+              <nz-form-item>
+                <nz-form-label nzRequired>Ngày nhận hàng</nz-form-label>
+                <nz-form-control>
+                  <nz-date-picker
+                    formControlName="expectedReturnDate"
+                    nzPlaceHolder="Chọn ngày"
+                    style="width: 100%"
+                    class="field-input"
+                  ></nz-date-picker>
+                </nz-form-control>
+              </nz-form-item>
+
+              <!-- Loại hình vận tải -->
+              <!-- <nz-form-item>
+                <nz-form-label nzRequired>Loại hình vận tải</nz-form-label>
+                <nz-form-control>
+                  <nz-select
+                    formControlName="transportType"
+                    nzPlaceHolder="Chọn loại hình vận tải"
+                    style="width: 100%"
+                    class="field-input"
+                  >
+                    <nz-option
+                      *ngFor="let type of transportTypes"
+                      [nzValue]="type.value"
+                      [nzLabel]="type.label"
+                    ></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item> -->
+
+              <!-- Phương tiện -->
+              <nz-form-item>
+  <nz-form-label>Phương tiện</nz-form-label>
+  <nz-form-control>
+    <input
+      nz-input
+      formControlName="vehicleCode"
+      placeholder="Nhập hoặc chọn phương tiện"
+      class="field-input"
+      [nzAutocomplete]="autoVehicle"
+      (input)="onVehicleInput($event)"
+    />
+   <nz-autocomplete #autoVehicle (nzSelect)="onVehicleSelect($event)">
+  <nz-auto-option
+    *ngFor="let vehicle of filteredVehicles" 
+    [nzValue]="vehicle.value"
+    [nzLabel]="vehicle.value"
+  >
+    {{ vehicle.value }}</nz-auto-option>
+</nz-autocomplete>
+  </nz-form-control>
+</nz-form-item>   
+
+              <!-- Người vận tải -->
+              <nz-form-item>
+                <nz-form-label>Người vận tải</nz-form-label>
+                <nz-form-control>
+                  <input
+                    nz-input
+                    formControlName="driver"
+                    placeholder="Nhập thông tin người vận tải"
+                    class="field-input"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+
+              <!-- Đơn vị vận tải -->
+
+              <nz-form-item>
+                <nz-form-label>Đơn vị vận tải</nz-form-label>
+                <nz-form-control>
+                  <nz-select
+                    formControlName="transportUnit"
+                    nzPlaceHolder="Chọn đơn vị vận tải"
+                    class="field-input"
+                    nzShowSearch
+                    nzAllowClear
+                  >
+                    <nz-option
+                      *ngFor="let transportUnit of transportUnits"
+                      [nzValue]="transportUnit.value"
+                      [nzLabel]="transportUnit.label"
+                    ></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+
+              <!-- Kho xuất hàng -->
+              <nz-form-item>
+                <nz-form-label>Kho xuất hàng</nz-form-label>
+                <nz-form-control>
+                  <nz-select
+                    nzShowSearch
+                    nzAllowClear
+                    formControlName="storageCode"
+                    nzPlaceHolder="Chọn kho xuất hàng"
+                    style="width: 100%"
+                    class="field-input"
+                  >
+                    <nz-option
+                      *ngFor="let storage of storages"
+                      [nzValue]="storage.value"
+                      [nzLabel]="storage.label"
+                    ></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+
+              <!-- Người đại diện -->
+              <nz-form-item>
+                <nz-form-label>Người đại diện</nz-form-label>
+                <nz-form-control>
+                  <input
+                    nz-input
+                    placeholder="Nhập tên người đại diện"
+                    class="field-input"
+                    formControlName="representative"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+
+              <!-- Email -->
+              <nz-form-item>
+                <nz-form-label>Email</nz-form-label>
+                <nz-form-control>
+                  <input
+                    nz-input
+                    formControlName="email"
+                    placeholder="Nhập địa chỉ email"
+                    class="field-input"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+
+              <!-- Số điện thoại -->
+              <nz-form-item>
+                <nz-form-label>Số điện thoại</nz-form-label>
+                <nz-form-control>
+                  <input
+                    nz-input
+                    formControlName="phone"
+                    placeholder="Nhập số điện thoại"
+                    class="field-input"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+
+              <!-- Ghi chú -->
+              <nz-form-item>
+                <nz-form-label>Ghi chú</nz-form-label>
+                <nz-form-control>
+                  <textarea
+                    nz-input
+                    formControlName="returnNote"
+                    rows="3"
+                    placeholder="Nhập ghi chú"
+                    class="field-input"
+                  ></textarea>
+                </nz-form-control>
+              </nz-form-item>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item Search Modal Template -->
+    <ng-template #itemSearchTpl>
+      <div class="item-search-modal">
+        <div class="modal-header-row">
+          <div class="modal-title">CHỌN MẶT HÀNG</div>
+          <button
+            nz-button
+            nzType="default"
+            nzShape="round"
+            (click)="closeModal()"
+          >
+            Đóng
+          </button>
+        </div>
+        <div class="search-section" style="margin-bottom: 16px">
+          <div style="display: flex; gap: 8px">
+            <input
+              nz-input
+              [(ngModel)]="searchKey"
+              placeholder="Tìm kiếm mặt hàng..."
+              (keyup.enter)="onSearchItems()"
+              style="flex: 1"
+            />
+            <button
+              nz-button
+              nzType="default"
+              (click)="onSearchItems()"
+              class="icon-only"
+            >
+              <nz-icon nzType="search"></nz-icon>
+            </button>
+            <button
+              nz-button
+              nzType="default"
+              (click)="resetSearch()"
+              class="icon-only"
+            >
+              <nz-icon nzType="redo"></nz-icon>
+            </button>
+          </div>
+        </div>
+        <div class="items-table">
+          <nz-table
+            [nzData]="pagedSearchResults"
+            nzBReturned
+            [nzFrontPagination]="false"
+            [nzShowPagination]="false"
+          >
+            <thead>
+              <tr>
+                <th style="width: 50px; white-space: nowrap">STT</th>
+                <th>Mã</th>
+                <th>Tên mặt hàng</th>
+                <th>Đơn vị tính</th>
+                <th>ĐVT cơ bản</th>
+                <th *ngIf="isOutProvince">Giá hàng hóa</th>
+                <th style="width: 140px">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of pagedSearchResults; let i = index">
+                <td>{{ i + 1 + (itemsCurrentPage - 1) * itemsPageSize }}</td>
+                <td>{{ item.code }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.unitProductName }}</td>
+                <td>{{item.basicUnitProductName}}</td>
+                <td *ngIf="isOutProvince">{{ item.price | number : "1.0-0" }} đ</td>
+                <td>
+                  <ng-container *ngIf="item.isAdded; else canAdd">
+                    <button
+                      nz-button
+                      nzShape="round"
+                      nzSize="small"
+                      disabled
+                      class="added-pill icon-only"
+                    >
+                      <nz-icon nzType="check-circle"></nz-icon>
+                      <span>Đã thêm</span>
+                    </button>
+                  </ng-container>
+                  <ng-template #canAdd>
+                    <button
+                      nz-button
+                      nzType="default"
+                      nzShape="round"
+                      nzSize="small"
+                      (click)="selectItem(item)"
+                    >
+                      <nz-icon nzType="plus"></nz-icon>
+                      <span>Thêm</span>
+                    </button>
+                  </ng-template>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+          <nz-pagination
+            class="pagination-spacing"
+            [nzPageIndex]="itemsCurrentPage"
+            [nzTotal]="searchResults.length"
+            [nzPageSize]="itemsPageSize"
+            [nzPageSizeOptions]="[10, 20, 30, 50, 100]"
+            [nzShowSizeChanger]="true"
+            nzShowQuickJumper
+            (nzPageIndexChange)="onItemsPageChange(+$event)"
+            (nzPageSizeChange)="onItemsPageSizeChange(+$event)"
+          >
+          </nz-pagination>
+        </div>
+      </div>
+    </ng-template>
+  </nz-page-header-content>
+</nz-page-header>
+
+<!-- Role-style confirmation: cancel return -->
+<ng-template #confirmCancelTpl>
+  <div class="confirm-row">
+    <div class="confirm-title">
+      <span
+        nz-icon
+        nzType="exclamation-circle"
+        nzTheme="twotone"
+        [nzTwotoneColor]="'#faad14'"
+        class="warning-icon"
+      ></span>
+      Bạn có chắc chắn muốn hủy đơn hàng này?
+    </div>
+    <div class="confirm-actions">
+      <button
+        nz-button
+        nzType="default"
+        class="ml-3"
+        (click)="confirmProceed()"
+      >
+        Xác nhận
+      </button>
+      <button nz-button nzType="default" (click)="closeConfirmModal()">
+        Huỷ
+      </button>
+    </div>
+  </div>
+</ng-template>

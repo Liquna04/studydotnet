@@ -1,0 +1,361 @@
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 16px; /* Tạo khoảng cách với hàng nút bên dưới */
+
+  /* Dropdown chọn loại đơn */
+  .view-mode-select {
+    flex-shrink: 0;
+    nz-select {
+      width: 160px;
+      height: 40px !important; /* Cao 40px để bằng input */
+    }
+    /* Fix chiều cao nội bộ Ant Design */
+    ::ng-deep .ant-select-selector {
+      height: 40px !important;
+      align-items: center;
+    }
+    ::ng-deep .ant-select-selection-item {
+      line-height: 38px !important;
+    }
+  }
+
+  /* Nhóm ô tìm kiếm và nút */
+  .search-group {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+
+    .search-input {
+      height: 40px !important;      /* Chiều cao 40px */
+      line-height: 40px !important;
+      margin-right: 8px;
+      border-radius: 4px;
+      min-width: 250px;
+      flex: 1;
+    }
+
+    .search-buttons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px !important;
+        width: 40px !important;
+        padding: 0;
+        border-radius: 4px;
+        background-color: #fff; /* Màu nền trắng */
+        
+        /* QUAN TRỌNG: Thêm viền cho nút */
+        border: 1px solid #d9d9d9 !important; 
+        
+        &:hover {
+          color: #1890ff;
+          border-color: #1890ff !important;
+        }
+
+        span {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+// Desktop: buttons nằm ngang, kích thước vừa đủ
+.actions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+  align-items: center;
+  button {
+    min-width: 120px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .view-mode-select {
+    width: 220px;
+    
+    nz-select {
+      width: 100%;
+    }
+  }
+}
+
+/* Mobile rules: <=768px */
+@media (max-width: 768px) {
+  :host ::ng-deep .ant-page-header-heading-extra {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .search-group {
+    min-width: auto;
+    width: 100%;
+  }
+
+  /* two buttons per row, each 50% width */
+  .actions-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+.actions-bar .view-mode-select {
+    width: 100% !important;
+    grid-column: span 2; /* Cho select nằm riêng 1 hàng full width */
+  }
+  .actions-bar button {
+    width: 100% !important;
+    min-width: unset !important;
+    justify-content: center !important;
+  }
+
+  /* Table font size reduced to 12px */
+  :host ::ng-deep .style-data-table .ant-table {
+    font-size: 12px !important;
+  }
+
+  :host ::ng-deep .style-data-table .ant-table-thead > tr > th,
+  :host ::ng-deep .style-data-table .ant-table-tbody > tr > td {
+    font-size: 12px !important;
+    padding: 8px 8px;
+  }
+}
+
+/* Tablet rules: 769px–1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+  :host ::ng-deep .ant-page-header-heading-extra {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .search-group {
+    min-width: auto;
+    width: 100%;
+  }
+
+  /* two buttons per row on tablet as well */
+  .actions-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .actions-bar button {
+    width: 100% !important;
+    min-width: unset !important;
+    justify-content: center !important;
+  }
+}
+
+/* Remove border/background from prev/next pagination buttons */
+:host ::ng-deep .ant-pagination-prev,
+:host ::ng-deep .ant-pagination-next {
+  button {
+    border: none !important;
+    background: transparent !important;
+    color: rgba(0, 0, 0, 0.65) !important;
+    padding: 4px 8px !important;
+    height: auto !important;
+    width: auto !important;
+    min-width: unset !important;
+    justify-content: unset !important;
+
+    &:hover {
+      color: #1890ff !important;
+      background: transparent !important;
+      border: none !important;
+    }
+  }
+
+  .ant-pagination-item-link {
+    border: none !important;
+    background: transparent !important;
+    color: rgba(0, 0, 0, 0.65) !important;
+  }
+
+  &:hover .ant-pagination-item-link {
+    color: #1890ff !important;
+    border: none !important;
+  }
+}
+
+// Status Filter Styles for NzPopoverModule
+.status-filter-header-th {
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    color: #1890ff;
+  }
+}
+
+.status-filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+  gap: 4px;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  [nz-icon] {
+    &[nzType="caret-down"] {
+      font-size: 10px;
+      margin-left: 4px;
+      transition: transform 0.2s;
+    }
+
+    &[nzType="filter"] {
+      color: #1890ff;
+      margin-left: 8px;
+    }
+  }
+}
+
+.status-filter-content {
+  min-width: 250px;
+
+  .filter-options {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 8px 0;
+
+    label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      padding: 6px 8px;
+      margin-bottom: 0;
+      border-radius: 2px;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: #fafafa;
+      }
+
+      input[type="checkbox"] {
+        margin-right: 8px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .filter-actions {
+    display: flex;
+    justify-content: stretch;
+
+    button {
+      width: 100%;
+      font-size: 12px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        color: #1890ff;
+        border-color: #1890ff;
+      }
+    }
+  }
+}
+
+/* Ngăn pagination xuống dòng */
+::ng-deep .pagination-spacing {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  overflow-x: auto !important; /* Cho phép scroll ngang nếu quá dài */
+  white-space: nowrap !important;
+}
+
+::ng-deep .pagination-spacing .ant-pagination {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+}
+
+/* Giảm khoảng cách giữa các items */
+::ng-deep .pagination-spacing .ant-pagination-item,
+::ng-deep .pagination-spacing .ant-pagination-prev,
+::ng-deep .pagination-spacing .ant-pagination-next,
+::ng-deep .pagination-spacing .ant-pagination-jump-prev,
+::ng-deep .pagination-spacing .ant-pagination-jump-next {
+  margin: 0 2px !important; /* Giảm margin */
+  min-width: 28px !important; /* Giảm width tối thiểu */
+}
+
+/* Giảm kích thước font và padding cho mobile */
+@media (max-width: 767px) {
+  ::ng-deep .pagination-spacing .ant-pagination-item,
+  ::ng-deep .pagination-spacing .ant-pagination-prev,
+  ::ng-deep .pagination-spacing .ant-pagination-next {
+    font-size: 12px !important;
+    padding: 0 4px !important;
+    min-width: 24px !important;
+    height: 24px !important;
+    line-height: 22px !important;
+  }
+  
+  ::ng-deep .pagination-spacing .ant-pagination-item a {
+    padding: 0 4px !important;
+  }
+  
+  /* Giảm kích thước dropdown page size */
+  ::ng-deep .pagination-spacing .ant-pagination-options {
+    margin-left: 4px !important;
+  }
+  
+  ::ng-deep .pagination-spacing .ant-select-selector {
+    font-size: 12px !important;
+    padding: 0 4px !important;
+    height: 24px !important;
+  }
+}
+
+/* Alternative approach: target via pagination-spacing class */
+::ng-deep .pagination-spacing .ant-pagination-prev button,
+::ng-deep .pagination-spacing .ant-pagination-next button,
+::ng-deep .pagination-spacing .ant-pagination-prev .ant-pagination-item-link,
+::ng-deep .pagination-spacing .ant-pagination-next .ant-pagination-item-link {
+  border: none !important;
+  background: transparent !important;
+  color: rgba(0, 0, 0, 0.65) !important;
+  padding: 4px 8px !important;
+  height: auto !important;
+  width: auto !important;
+  min-width: unset !important;
+  justify-content: unset !important;
+}
+
+::ng-deep .pagination-spacing .ant-pagination-prev button:hover,
+::ng-deep .pagination-spacing .ant-pagination-next button:hover,
+::ng-deep .pagination-spacing .ant-pagination-prev:hover .ant-pagination-item-link,
+::ng-deep .pagination-spacing .ant-pagination-next:hover .ant-pagination-item-link {
+  color: #1890ff !important;
+  background: transparent !important;
+  border: none !important;
+}

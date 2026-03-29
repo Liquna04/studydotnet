@@ -1,0 +1,580 @@
+@use "../../../styles/_mixins.scss" as mixins;
+@use "../../../styles/_variables.scss" as vars;
+
+// --------------------------------------------------
+// Container chính của trang đăng nhập
+// --------------------------------------------------
+.login-container {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background: var(--color-white);
+  display: flex;
+  overflow: hidden;
+
+  .bg-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .bg-layer-1 {
+    z-index: 2;
+  }
+  .bg-layer-2 {
+    z-index: 1;
+  }
+
+  .bg-decor {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .decor {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.95;
+  }
+  .decor-1 {
+    left: 25%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+  }
+  .decor-2 {
+    left: 30%;
+    top: 38%;
+    transform: translate(-50%, -50%);
+  }
+  .decor-3 {
+    left: 35%;
+    top: 52%;
+    transform: translate(-50%, -50%);
+  }
+  .decor-4 {
+    left: 20%;
+    top: 20%;
+    transform: translate(50%, -50%);
+  }
+}
+
+// --------------------------------------------------
+// Header: logo và tên thương hiệu
+// --------------------------------------------------
+.login-logo-left {
+  position: absolute;
+  left: 24px;
+  top: 36px;
+  width: 116px;
+  height: 61px;
+  background: url("/img/petrolimex_logo.svg") 50% / cover no-repeat;
+  z-index: 5;
+  border-radius: var(--radius-sm);
+  pointer-events: none;
+}
+.login-brand {
+  position: absolute;
+  left: calc(24px + 116px);
+  top: 36px;
+  height: 61px;
+  display: flex;
+  align-items: center;
+  color: var(--color-accent);
+  font-family: "Inria Sans";
+  font-weight: 700;
+  gap: 4px;
+  z-index: 6;
+  pointer-events: none;
+}
+.login-texts {
+  position: absolute;
+  left: 60px;
+  top: calc(24px + 61px + 75px);
+  z-index: 6;
+  pointer-events: none;
+  /* Layout split 50-50: phần bên trái chiếm 50%, để 50% cho form bên phải */
+  width: calc(50% - 60px - 24px);
+  max-width: calc(50vw - 84px);
+  min-width: 300px;
+}
+.login-title-1 {
+  color: var(--color-accent);
+  font-size: 40px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  font-family: "Inter", serif;
+}
+.login-title-2 {
+  color: var(--color-text-primary);
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 56px;
+  margin: 0 0 16px 0;
+  font-family: "Be Vietnam Pro", sans-serif;
+}
+.login-desc {
+  color: var(--color-text-description);
+  font-size: 14px;
+  line-height: 26px;
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  /* Đảm bảo text wrap tự nhiên */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+// --------------------------------------------------
+// Nút kêu gọi hành động (CTA)
+// --------------------------------------------------
+.cta-button {
+  display: inline-flex;
+  padding: 8px 45px 8px 49px;
+  justify-content: flex-end;
+  align-items: center;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    138deg,
+    var(--color-primary) 9.17%,
+    var(--color-blue-light) 54.27%,
+    var(--color-primary) 94.27%
+  );
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 24px;
+  border: none;
+  outline: none;
+}
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+.cta-button:focus {
+  box-shadow: 0 0 0 3px rgba(21, 70, 232, 0.2);
+}
+.cta-button-text {
+  color: var(--color-white);
+  font-size: 15px;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+  text-align: center;
+  white-space: nowrap;
+}
+
+// --------------------------------------------------
+// Responsive cho breakpoint lg
+// --------------------------------------------------
+@include mixins.mq(lg) {
+  .login-texts {
+    /* Giữ nguyên left position để không nhảy cóc */
+    left: 60px;
+    top: calc(24px + 61px + 32px);
+    /* Layout split 50-50: phần bên trái chiếm 50% */
+    width: calc(50% - 60px - 24px);
+    max-width: calc(50vw - 84px);
+  }
+  .login-title-1 {
+    font-size: 36px;
+  }
+  .login-title-2 {
+    font-size: 34px;
+  }
+  .login-desc {
+    /* Loại bỏ width cố định */
+    width: auto;
+    max-width: 100%;
+  }
+  .cta-button {
+    padding: 10px 50px 10px 54px;
+  }
+  .cta-button-text {
+    font-size: 18px;
+  }
+}
+
+// --------------------------------------------------
+// Responsive cho breakpoint sm (điện thoại)
+// --------------------------------------------------
+@include mixins.mq(sm) {
+  .login-logo-left {
+    left: 12px;
+    top: 12px;
+    width: 92px;
+    height: auto;
+  }
+  .login-brand {
+    left: calc(12px + 92px + 6px);
+    top: 12px;
+    font-size: 16px;
+    height: 46px;
+  }
+  .login-texts {
+    left: 16px;
+    top: calc(12px + 46px + 16px);
+    /* Mobile: để lại không gian cho form */
+    width: auto;
+    max-width: calc(100vw - 16px - 20px);
+    min-width: auto;
+  }
+  .login-title-1 {
+    font-size: 22px;
+  }
+  .login-title-2 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+  .login-desc {
+    font-size: 14px;
+    line-height: 22px;
+    width: auto;
+    max-width: 100%;
+  }
+  .cta-button {
+    padding: 6px 30px 6px 34px;
+    margin-top: 16px;
+  }
+  .cta-button-text {
+    font-size: 14px;
+  }
+}
+
+// --------------------------------------------------
+// Thẻ form đăng nhập
+// --------------------------------------------------
+.login-form-container {
+  position: absolute;
+  /* Form luôn chiếm 50% phía bên phải */
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  /* Chiều rộng = 50% */
+  width: 50%;
+  max-width: 50vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 4vw, 60px);
+}
+.login-form-container .login-card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  width: 100%;
+  max-width: 460px;
+}
+
+// --------------------------------------------------
+// Nội dung form
+// --------------------------------------------------
+.login-form-content {
+  padding: 32px;
+}
+.login-form-content .form-title {
+  font-size: 24px;
+  font-weight: 900;
+  font-family: "Roboto";
+  color: var(--color-primary);
+  margin: 0 0 32px 0;
+  position: relative;
+}
+.login-form-content .form-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  /* configurable width via CSS variable; default 64px */
+  width: var(--title-underline-width, 150px);
+  height: 6px;
+  background: var(--color-accent);
+  border-radius: 4px;
+}
+
+// --------------------------------------------------
+// Ví dụ: thu gọn gạch chân cho form đăng ký
+// --------------------------------------------------
+.register-form .form-title {
+  --title-underline-width: 100px;
+}
+
+// --------------------------------------------------
+// Wrapper cho input (email + mật khẩu)
+// --------------------------------------------------
+.user-info-section .input-wrapper,
+.password-input-section .input-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background: var(--color-gray-light);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+// --------------------------------------------------
+// Khoảng cách giữa khối email và mật khẩu
+// --------------------------------------------------
+.user-info-section {
+  margin-bottom: 16px;
+}
+.password-input-section {
+  margin-top: 6px;
+}
+.input-icon {
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+}
+.email-input,
+.password-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  color: var(--color-text-primary);
+  outline: none;
+}
+.email-input::placeholder,
+.password-input::placeholder {
+  color: var(--color-text-secondary);
+  opacity: 1;
+}
+.password-input-section .password-toggle {
+  background: #f5f6fa !important; /* exact input-wrapper background color */
+  background-color: #f5f6fa !important; /* backup */
+  border: none !important;
+  cursor: pointer !important;
+  padding: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+  border-radius: 4px !important; /* subtle rounding to match input area */
+  min-height: auto !important; /* override global button styles */
+  height: auto !important;
+  gap: 0 !important; /* remove gap from global button styles */
+  box-shadow: none !important;
+}
+
+// --------------------------------------------------
+// Reset style cho WebKit autofill để đồng nhất giao diện
+// --------------------------------------------------
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--color-gray-light) inset !important;
+  -webkit-text-fill-color: var(--color-text-primary) !important;
+}
+
+// --------------------------------------------------
+// Các tuỳ chọn phụ (nhớ mật khẩu, quên mật khẩu)
+// --------------------------------------------------
+.form-options-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  margin-bottom: 32px;
+  gap: 12px;
+}
+
+// --------------------------------------------------
+// Wrapper cho checkbox "ghi nhớ"
+// --------------------------------------------------
+.remember-wrapper {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.remember-checkbox {
+  margin: 0 8px 0 0;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+}
+.remember-label {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  user-select: none;
+}
+
+// --------------------------------------------------
+// Liên kết quên mật khẩu
+// --------------------------------------------------
+.forgot-password-link {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 14px;
+}
+.forgot-password-link:hover {
+  text-decoration: underline;
+}
+
+// --------------------------------------------------
+// Nút đăng nhập chính
+// --------------------------------------------------
+.login-form-content .login-btn {
+  width: 100% !important;
+  padding: 20px 16px !important; /* taller button */
+  background: #1546e8 !important; /* specific primary color */
+  background-color: #1546e8 !important; /* backup */
+  color: #ffffff !important; /* white text */
+  border: none !important;
+  border-radius: 8px !important; /* explicit radius */
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  margin-bottom: 24px !important;
+  min-height: auto !important; /* override global button min-height */
+  height: auto !important; /* override global button height */
+  text-align: center !important; /* center the text */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: none !important;
+}
+.login-form-content .login-btn:hover {
+  background: #ffffff !important; /* white background on hover */
+  background-color: #ffffff !important; /* backup */
+  box-shadow: 0 4px 12px rgba(21, 70, 232, 0.15) !important;
+  transform: translateY(-1px) !important;
+  color: #f58026 !important; /* accent color text on hover */
+  border: 1px solid #e9ecef !important; /* subtle border on hover */
+}
+
+// --------------------------------------------------
+// Phần đăng ký nhanh
+// --------------------------------------------------
+.register-section {
+  text-align: center;
+  margin-bottom: 24px;
+}
+// --------------------------------------------------
+// Chân form đăng nhập
+// --------------------------------------------------
+.login-footer {
+  /* left: brand (logo + text), right: copyright; separator centered */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-top: 1px solid var(--color-border);
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* tighter gap so logo and brand stick together */
+  justify-content: flex-start;
+  margin: 0;
+  flex: 0 1 auto;
+}
+.footer-logo {
+  width: clamp(28px, 4.5vw, 40px);
+  height: auto;
+  aspect-ratio: 116 / 61;
+  background-image: url("/img/petrolimex_logo.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex: 0 0 auto;
+  vertical-align: middle;
+}
+.footer-brand-text {
+  font-weight: 700;
+  /* slightly smaller and consistent with copyright */
+  font-size: clamp(12px, 2.2vw, 13px);
+  color: var(--color-accent);
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+  margin: 0;
+}
+.footer-copyright {
+  font-size: clamp(12px, 2.2vw, 13px);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  vertical-align: middle;
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+// --------------------------------------------------
+// Tinh chỉnh kích thước form theo breakpoint
+// --------------------------------------------------
+
+@media (max-width: var(--bp-xl)) {
+  .login-form-container {
+    right: 50px;
+    width: 420px;
+  }
+}
+@media (max-width: var(--bp-lg)) {
+  .login-form-container {
+    right: 30px;
+    width: 380px;
+  }
+}
+@media (max-width: var(--bp-md)) {
+  .login-form-container {
+    position: relative;
+    right: auto;
+    left: auto;
+    top: auto;
+    transform: none;
+    /* mobile: cho phép co dãn vừa đủ và canh giữa */
+    width: min(420px, 94vw);
+    max-width: 420px;
+    margin: 40px auto 0;
+    padding: 0 16px;
+  }
+  /* background không ép chiều rộng lớn trên mobile */
+  .background-layers .bg-layer {
+    min-width: 100%;
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-width: var(--bp-sm)) {
+  .login-card {
+    padding: 24px 20px;
+  }
+  .login-header {
+    margin-bottom: 20px;
+  }
+  .login-header h2 {
+    font-size: 20px;
+  }
+}
+
+// --------------------------------------------------
+// Khi không đủ không gian cho text: ẩn text và canh giữa form
+// --------------------------------------------------
+@media (max-width: 900px) {
+  .login-texts {
+    display: none !important;
+  }
+  .login-logo-left,
+  .login-brand {
+    display: none !important;
+  }
+  .login-form-container {
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    right: auto !important;
+    transform: translate(-50%, -50%) !important;
+    width: min(460px, 94vw) !important;
+    max-width: 460px !important;
+    margin: 0 !important;
+    z-index: 20 !important;
+  }
+}

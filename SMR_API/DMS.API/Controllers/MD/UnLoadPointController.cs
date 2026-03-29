@@ -1,0 +1,184 @@
+﻿using Common;
+using DMS.API.AppCode.Attribute;
+using DMS.API.AppCode.Enum;
+using DMS.API.AppCode.Extensions;
+using DMS.BUSINESS;
+using DMS.BUSINESS.Dtos.MD;
+using DMS.BUSINESS.Services.MD;
+using DMS.CORE.Entities.MD;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+
+namespace DMS.API.Controllers.MD
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
+    public class UnLoadPointController(IUnLoadPointService service, ICustomerService customerService) : ControllerBase
+    {
+        public readonly IUnLoadPointService _service = service;
+        public readonly ICustomerService _customerService = customerService;
+
+        [HttpGet("GetCustomers")]
+        public async Task<IActionResult> GetCustomers([FromQuery] BaseMdFilter filter)
+        {
+            var transferObject = new TransferObject();
+            var result = await _customerService.GetAll(filter);
+            if (_customerService.Status)
+            {
+                transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _customerService);
+            }
+            return Ok(transferObject);
+        }
+        [HttpGet("Search")]
+        [CustomAuthorize(Right = "R2.6.1")]
+
+        public async Task<IActionResult> Search([FromQuery] BaseFilter filter)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.Search(filter);
+
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
+        [HttpGet("GetAll")]
+        [CustomAuthorize(Right = "R2.6.1")]
+
+        public async Task<IActionResult> GetAll([FromQuery] BaseMdFilter filter)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.GetAll(filter);
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
+        [HttpPost("Insert")]
+        [CustomAuthorize(Right = "R2.6.2")]
+
+        public async Task<IActionResult> Insert([FromBody] UnLoadPointCreateUpdateDto data)
+        {
+            var transferObject = new TransferObject();
+            await _service.AddCustom(data);
+            if (_service.Status)
+            {
+                transferObject.Status = true;
+                transferObject.MessageObject.MessageType = MessageType.Success;
+                transferObject.GetMessage("0100", _service);
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0101", _service);
+            }
+            return Ok(transferObject);
+        }
+        [HttpPost("ImportExcel")]
+        [CustomAuthorize(Right = "R2.6.4")]
+
+        public async Task<IActionResult> ImportExcel(IFormFile file)
+        {
+            var transferObject = new TransferObject();
+
+            try
+            {
+                if (file == null || file.Length == 0)
+                    throw new ArgumentException("Vui lòng chọn file Excel hợp lệ!");
+
+                var result = await _service.ImportExcel(file);
+
+                transferObject.Status = true;
+                transferObject.Data = result;
+                transferObject.MessageObject.MessageType = MessageType.Success;
+                transferObject.GetMessage("0103", _service);
+            }
+            catch (ArgumentException ex)
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.MessageObject.Message = ex.Message;
+            }
+            catch (InvalidOperationException ex)
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.MessageObject.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                // Không để exception văng ra -> luôn trả về HTTP 200
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.MessageObject.Message = $"Lỗi hệ thống: {ex.Message}";
+            }
+
+            // ✅ Luôn trả về HTTP 200 để FE dễ xử lý
+            return Ok(transferObject);
+        }
+
+        [HttpPut("Update")]
+        [CustomAuthorize(Right = "R2.6.3")]
+
+        public async Task<IActionResult> Update([FromBody] UnLoadPointCreateUpdateDto data)
+        {
+            var transferObject = new TransferObject();
+            await _service.UpdateCustom(data);
+            if (_service.Status)
+            {
+                transferObject.Status = true;
+                transferObject.MessageObject.MessageType = MessageType.Success;
+                transferObject.GetMessage("0103", _service);
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0104", _service);
+            }
+            return Ok(transferObject);
+        }
+        [HttpDelete("Delete/{id}")]
+        public async Task<IActionResult> Delete([FromRoute] string id)
+        {
+            var transferObject = new TransferObject();
+            await _service.DeleteInfo(id);
+            if (_service.Status)
+            {
+                transferObject.Status = true;
+                transferObject.MessageObject.MessageType = MessageType.Success;
+                transferObject.GetMessage("0105", _service);
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0106", _service);
+            }
+            return Ok(transferObject);
+        }
+    }
+}

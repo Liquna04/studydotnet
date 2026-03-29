@@ -1,0 +1,199 @@
+<nz-drawer
+  [nzMask]="true"
+  [nzWidth]="drawerWidth"
+  [nzVisible]="visible"
+  nzPlacement="right"
+  nzTitle="Cập nhật"
+  [nzExtra]="extra"
+  (nzOnClose)="closeDrawer()"
+  [nzClosable]="false"
+>
+  <div *nzDrawerContent>
+    <!-- Mobile/tablet reset row (<=768px) - rendered via isSmall -->
+    <div class="mobile-reset-row" *ngIf="isSmall">
+      <button
+        nz-button
+        nzType="default"
+        class="!flex !items-center reset-password"
+        (click)="resetPassword()"
+      >
+        <span nz-icon nzType="sync" nzTheme="outline"></span> Đặt lại mật khẩu
+      </button>
+    </div>
+    <nz-tabset>
+      <nz-tab nzTitle="Thông tin">
+        <form
+          nz-form
+          nzLayout="vertical"
+          [formGroup]="validateForm"
+          (ngSubmit)="submitForm()"
+        >
+          <div nz-row [nzGutter]="12">
+            <div nz-col [nzXs]="24" [nzMd]="12">
+              <app-input-clear
+                placeholder="Nhập tên tài khoản"
+                [required]="true"
+                label="Tên tài khoản"
+                [control]="$any(validateForm).controls['userName']"
+              ></app-input-clear>
+            </div>
+            <div nz-col [nzXs]="24" [nzMd]="12">
+              <app-input-clear
+                placeholder="Nhập tên đầy đủ"
+                [required]="true"
+                label="Tên đầy đủ"
+                [control]="$any(validateForm).controls['fullName']"
+              ></app-input-clear>
+            </div>
+            <div nz-col [nzXs]="24" [nzMd]="12">
+              <app-input-clear
+                placeholder="Nhập địa chỉ"
+                label="Địa chỉ"
+                [control]="$any(validateForm).controls['address']"
+              ></app-input-clear>
+            </div>
+            <div nz-col [nzXs]="24" [nzMd]="12">
+              <app-input-clear
+                placeholder="Nhập số điện thoại"
+                label="Số điện thoại"
+                [control]="$any(validateForm).controls['phoneNumber']"
+              ></app-input-clear>
+            </div>
+            <div nz-col [nzXs]="24" [nzMd]="12">
+              <app-input-clear
+                placeholder="Nhập email"
+                label="Email"
+                [control]="$any(validateForm).controls['email']"
+              ></app-input-clear>
+            </div>
+             <div nz-col [nzXs]="24" [nzMd]="12">
+      <app-input-select
+        label="Kiểu người dùng"
+        [required]="true"
+        placeholder="Chọn kiểu người dùng"
+        [control]="$any(validateForm).controls['accountType']"
+        [options]="accountTypeOptions"
+      ></app-input-select>
+    </div>
+    <div nz-col [nzXs]="24" [nzMd]="12" *ngIf="isShowReferenceSelect">
+      <app-input-select
+        [label]="referenceLabel"
+        [required]="true"
+        [placeholder]="referenceLabel"
+        [control]="$any(validateForm).controls['referenceCode']"
+        [options]="referenceOptions"
+      ></app-input-select>
+    </div>
+
+            <div nz-col [nzXs]="24">
+              <nz-form-item>
+                <nz-form-label>Trạng thái</nz-form-label>
+                <nz-form-control>
+                  <nz-radio-group formControlName="isActive">
+                    <label nz-radio [nzValue]="true">Kích hoạt</label>
+                    <label nz-radio [nzValue]="false">Khoá</label>
+                  </nz-radio-group>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+        </form>
+        <!--
+      <label>Chọn ảnh</label>
+    <div class="main-upload">
+      <div class="upload-avatar" (click)="fileInput.click()">
+        <nz-icon nzType="cloud-upload" nzTheme="outline" style="font-size: 24px;"/>
+        <div>Chọn ảnh</div>
+      </div>
+      <div class="avatar-preview" *ngIf="avatarBase64 != null && avatarBase64 != ''">
+        <img [src]="avatarBase64" width="128" height="128"/>
+      </div>
+    </div>
+    <input type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" style="display: none;" />
+    -->
+      </nz-tab>
+      <nz-tab nzTitle="Nhóm người dùng">
+        <div style="overflow: auto">
+          <nz-transfer
+            [nzTitles]="[
+              'Không chứa tài khoản ' + userName,
+              'Chứa tài khoản ' + userName
+            ]"
+            [nzListStyle]="{ width: widthDeault, 'height.px': heightDeault }"
+            [nzDataSource]="optionsGroup"
+            nzShowSearch
+          ></nz-transfer>
+        </div>
+      </nz-tab>
+      <nz-tab nzTitle="Phân quyền">
+        <nz-tree
+          #treeCom
+          nzCheckable
+          nzMultiple
+          [nzData]="nodes"
+          nzBlockNode
+          (nzOnDrop)="nzEvent($event)"
+          [nzSearchValue]="searchValue"
+          (nzSearchValueChange)="nzEvent($event)"
+          (nzOnDrop)="onDrop($event)"
+          (nzCheckBoxChange)="onCheckBoxChange($event)"
+          (nzClick)="onClick($event)"
+          [nzExpandedIcon]="multiExpandedIconTpl"
+        >
+          <ng-template #nzTreeTemplate let-node>
+            <span
+              [ngClass]="{
+              'in-checked': node.origin.InChecked,
+              'out-checked': node.origin.OutChecked,
+            }"
+            >
+              {{ node.title }}
+            </span>
+          </ng-template>
+          <ng-template #multiExpandedIconTpl let-node let-origin="origin">
+            <span
+              *ngIf="node.children.length > 0"
+              nz-icon
+              [nzType]="node.isExpanded ? 'caret-down' : 'caret-right'"
+              nzTheme="outline"
+              class="ant-tree-switcher-line-icon icon-tree"
+            ></span>
+          </ng-template>
+        </nz-tree>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+</nz-drawer>
+<ng-template #extra>
+  <div class="drawer-header-actions">
+    <div class="primary-actions">
+      <button
+        nz-button
+        nzType="default"
+        class="!flex !items-center"
+        (click)="submitForm()"
+      >
+        <span nz-icon nzType="save" nzTheme="outline"></span> Lưu
+      </button>
+      <button
+        nz-button
+        nzType="default"
+        class="!flex !items-center"
+        nzDanger
+        (click)="closeDrawer()"
+      >
+        <span nz-icon nzType="close-circle" nzTheme="outline"></span>Đóng
+      </button>
+    </div>
+    <div class="secondary-actions" *ngIf="!isSmall">
+      <button
+        nz-button
+        nzType="default"
+        class="!flex !items-center reset-password"
+        (click)="resetPassword()"
+      >
+        <span nz-icon nzType="sync" nzTheme="outline"></span> Đặt lại mật khẩu
+      </button>
+    </div>
+  </div>
+</ng-template>

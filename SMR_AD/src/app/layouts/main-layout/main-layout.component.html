@@ -1,0 +1,134 @@
+<nz-layout class="full-layout" (click)="onOverlayClick($event)">
+  <nz-sider
+    *ngIf="layoutReady"
+    nzCollapsible
+    [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null"
+    [nzWidth]="'240px'"
+  >
+    <div class="sidebar-header">
+      <div class="sidebar-logo"></div>
+      <div class="sidebar-brand" [class.hidden]="isCollapsed">SMO-HHK</div>
+    </div>
+    <ul
+      nz-menu
+      nzTheme="light"
+      nzMode="inline"
+      [nzInlineCollapsed]="!isMobile ? isCollapsed : false"
+    >
+      <ng-container
+        *ngTemplateOutlet="menuTpl; context: { $implicit: dataSidebarMenu }"
+      ></ng-container>
+      <ng-template #menuTpl let-menus>
+        <ng-container *ngFor="let menu of menus">
+          <ng-container *ngIf="!menu.children; else submenuTpl">
+            <li
+              [nzDisabled]="loading"
+              nz-menu-item
+              [nzPaddingLeft]="!isCollapsed ? menu.level * 24 : 0"
+              [nzDisabled]="menu.disabled"
+              [nzSelected]="menu.selected"
+              (click)="navigateTo(menu.url)"
+            >
+              <ng-container *ngIf="menu.icon">
+                <span nz-icon [nzType]="menu.icon"></span>
+              </ng-container>
+              <span>{{ menu.title }}</span>
+            </li>
+          </ng-container>
+          <ng-template #submenuTpl>
+            <li
+              nz-submenu
+              [nzPaddingLeft]="!isCollapsed ? menu.level * 24 : 0"
+              [nzOpen]="!isCollapsed && menu.open"
+              [nzTitle]="menu.title"
+              [nzIcon]="menu.level == 1 && menu?.icon ? menu.icon : ''"
+              [nzDisabled]="(isMobile && isCollapsed) || menu.disabled"
+            >
+              <ul>
+                <ng-container
+                  *ngTemplateOutlet="
+                    menuTpl;
+                    context: { $implicit: menu.children }
+                  "
+                ></ng-container>
+              </ul>
+            </li>
+          </ng-template>
+        </ng-container>
+      </ng-template>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <nz-icon
+        class="trigger"
+        [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+        (click)="$event.stopPropagation(); toggleSidebar()"
+        title="Toggle Sidebar"
+      />
+      <div>
+        <nz-breadcrumb>
+          <nz-breadcrumb-item
+            ><a routerLink="/home"><span nz-icon nzType="home"></span></a
+          ></nz-breadcrumb-item>
+          <nz-breadcrumb-item *ngFor="let breadcrumb of breadcrumbs">
+            <a [routerLink]="breadcrumb?.path">{{ breadcrumb?.name }}</a>
+          </nz-breadcrumb-item>
+        </nz-breadcrumb>
+      </div>
+      <div
+        nz-dropdown
+        [nzDropdownMenu]="dropdownUser"
+        class="user user-dropdown"
+      >
+        <button
+          nz-button
+          nzType="text"
+          class="user-btn"
+          aria-haspopup="true"
+          aria-expanded="false"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="avatar-wrap">
+            <img
+              *ngIf="hasAvatar; else noAvatar"
+              [src]="userAvatar"
+              alt="Avatar User"
+              class="avatar-img"
+              (error)="onAvatarError()"
+            />
+            <ng-template #noAvatar>
+              <!-- External SVG fallback (user) from svgrepo -->
+              <img
+                class="avatar-svg"
+                src="https://www.svgrepo.com/show/535711/user.svg"
+                alt="User"
+              />
+            </ng-template>
+          </div>
+          <div class="user-name" *ngIf="displayName">
+            {{ displayName }}
+          </div>
+        </button>
+      </div>
+      <nz-dropdown-menu #dropdownUser="nzDropdownMenu">
+        <ul nz-menu nzSelectable>
+          <li nz-menu-item (click)="changePass()">
+            <nz-icon nzType="lock" nzTheme="outline" /> Đổi mật khẩu
+          </li>
+          <li nz-menu-item (click)="logOut()">
+            <nz-icon nzType="login" nzTheme="outline" /> Đăng xuất
+          </li>
+        </ul>
+      </nz-dropdown-menu>
+    </nz-header>
+    <nz-content class="scroll-content">
+      <div class="inner-content">
+        <nz-spin [nzSpinning]="loading">
+          <router-outlet></router-outlet>
+        </nz-spin>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

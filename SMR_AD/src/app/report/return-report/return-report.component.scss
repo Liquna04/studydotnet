@@ -1,0 +1,87 @@
+:host {
+  display: block;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+}
+
+.site-page-header {
+  background-color: #fff;
+  padding: 0;
+}
+
+.toolbar-actions {
+  padding: 8px 16px;
+  background: #fff;
+  display: flex;
+  gap: 10px;
+  border-bottom: 1px solid #f0f0f0;
+
+  button {
+    font-weight: 500;
+    color: #595959;
+    
+    &:hover {
+      color: #1890ff;
+      background-color: #e6f7ff;
+    }
+    
+    span {
+      margin-right: 4px;
+    }
+  }
+}
+
+.filter-container {
+  padding: 24px;
+  background: #fff;
+  
+  .form-item {
+    margin-bottom: 16px;
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #595959;
+
+      &.ant-form-item-required::before {
+        content: '* ';
+        color: #ff4d4f;
+      }
+    }
+
+    nz-select, nz-range-picker {
+      width: 100%;
+    }
+  }
+
+  .date-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    nz-radio-group {
+        white-space: nowrap;
+    }
+  }
+}
+
+.preview-section {
+  padding: 0 24px 24px 24px;
+  background: #fff;
+  
+  h3 {
+    margin: 16px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f1f1f;
+  }
+
+  // Style Header bảng
+  ::ng-deep .ant-table-thead > tr > th {
+    font-weight: 600;
+    background: #fafafa;
+  }
+
+
+}

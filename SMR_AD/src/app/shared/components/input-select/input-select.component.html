@@ -1,0 +1,25 @@
+<nz-form-item [ngClass]="formItemClass">
+  <nz-form-label [nzRequired]="required">{{ label }}</nz-form-label>
+  <nz-form-control [nzErrorTip]="errorTpl">
+    <ng-template #errorTpl let-control>
+      {{ control.errors?.required ? 'This field is required' : '' }}
+    </ng-template>
+    <nz-select
+      [formControl]="control"
+      [nzShowSearch]="nzShowSearch"
+      [nzAllowClear]="nzAllowClear"
+      [nzDisabled]="disabled"
+      [nzPlaceHolder]="placeholder"
+      [nzSize]="'default'" 
+      style="width: 100%"
+      (ngModelChange)="onValueChange($event)"
+      (blur)="onBlur()"
+    >
+      <nz-option 
+        *ngFor="let option of options" 
+        [nzLabel]="option.label" 
+        [nzValue]="option.value"
+      ></nz-option>
+    </nz-select>
+  </nz-form-control>
+</nz-form-item>

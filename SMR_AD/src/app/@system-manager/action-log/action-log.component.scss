@@ -1,0 +1,113 @@
+// Header responsive styles
+.header-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  .filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+}
+
+.search-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 320px;
+}
+
+.search-group .search-input {
+  width: 280px;
+  max-width: 40vw;
+}
+
+.search-buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.action-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.search-buttons .gray-btn,
+.button-group .gray-btn {
+  background: #f5f6f8;
+  border: 1px solid #d9d9d9;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+
+    .filter-controls {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+
+  .search-group {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .search-group .search-input {
+    flex: 1;
+    max-width: none;
+  }
+
+  .action-group {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+.item_form {
+  margin-bottom: 24px;
+  input,
+  textarea {
+    margin-top: 8px;
+  }
+}
+
+pre {
+  border: 1px solid #d9d9d9;
+  padding: 8px;
+  margin-top: 8px;
+}
+
+.txt {
+  &_success {
+    color: green;
+  }
+  &_error {
+    color: red;
+  }
+}
+
+// Allow table cells to expand beyond initial width based on content
+:host ::ng-deep .ant-table-cell {
+  word-break: break-word !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+}
+
+// Allow links and text inside cells to wrap
+:host ::ng-deep .ant-table-cell a,
+:host ::ng-deep .ant-table-cell span {
+  word-break: break-word !important;
+  overflow: visible !important;
+}

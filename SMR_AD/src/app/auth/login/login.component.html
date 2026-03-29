@@ -1,0 +1,243 @@
+<div class="login-container">
+  <!-- Lớp nền SVG -->
+  <div class="background-layers">
+    <!-- Logo Petrolimex phía trên bên trái dưới dạng ảnh nền -->
+    <div class="login-logo-left" aria-hidden="true"></div>
+    <!-- Tên thương hiệu bên cạnh logo -->
+    <div class="login-brand" aria-hidden="true">SMO-HHK</div>
+
+    <!-- Các dòng chữ xếp chồng dưới logo -->
+    <div class="login-texts" aria-hidden="true">
+      <div class="login-title-1">SMO-HHK</div>
+      <div class="login-title-2">Giải pháp tạo đơn hàng trực tuyến</div>
+      <div class="login-desc">
+        Hệ thống cho phép cá nhân và doanh nghiệp đặt mua nhiều loại hàng hóa
+        (nhớt, dầu mỡ, phụ kiện, nước giặt...) trực tuyến trên nền tảng của Công
+        ty Xăng dầu Nghệ An. Giải pháp giúp đơn giản hóa quy trình đặt hàng,
+        minh bạch trong giao nhận, đảm bảo an toàn - hiệu quả và có khả năng
+        tích hợp với các hệ thống khác.
+      </div>
+
+      <!-- Nút kêu gọi hành động -->
+      <div class="cta-button" role="button" tabindex="0">
+        <div class="cta-button-text">Trải nghiệm ngay</div>
+      </div>
+    </div>
+
+    <!-- Lớp 1 - Sóng màu xanh -->
+    <svg
+      class="bg-layer bg-layer-1"
+      xmlns="http://www.w3.org/2000/svg"
+      width="1440"
+      height="819"
+      viewBox="0 0 1440 819"
+      preserveAspectRatio="xMidYMid slice"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M0 776.959V0H1440V808.458C1362.83 803.227 1173 859.955 834.5 753.961C496 647.966 182.5 673.965 0 776.959Z"
+        fill="#8AC9FF"
+      />
+    </svg>
+
+    <!-- Lớp 2 - Sóng màu cam -->
+    <svg
+      class="bg-layer bg-layer-2"
+      xmlns="http://www.w3.org/2000/svg"
+      width="1440"
+      height="821"
+      viewBox="0 0 1440 821"
+      preserveAspectRatio="xMidYMid slice"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M1440 643.674V0H0V739.819C490.5 856.727 688 865.755 1440 643.674Z"
+        fill="#FFD0B7"
+        fill-opacity="0.5"
+      />
+    </svg>
+
+    <!-- Các vòng trang trí nằm phía trên các lớp sóng nền -->
+    <div class="bg-decor">
+      <!-- vòng lớn màu xanh mờ -->
+      <svg
+        class="decor decor-1"
+        xmlns="http://www.w3.org/2000/svg"
+        width="64"
+        height="64"
+        viewBox="0 0 64 64"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle cx="32" cy="32" r="32" fill="#154DE8" fill-opacity="0.45" />
+      </svg>
+
+      <!-- vòng vừa màu mờ -->
+      <svg
+        class="decor decor-2"
+        xmlns="http://www.w3.org/2000/svg"
+        width="30"
+        height="30"
+        viewBox="0 0 30 30"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle cx="15" cy="15" r="15" fill="#154DE8" fill-opacity="0.2" />
+      </svg>
+
+      <!-- vòng nhỏ màu mờ -->
+      <svg
+        class="decor decor-3"
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle cx="8" cy="8" r="8" fill="#154DE8" fill-opacity="0.2" />
+      </svg>
+
+      <!-- vòng lớn hơn màu mờ -->
+      <svg
+        class="decor decor-4"
+        xmlns="http://www.w3.org/2000/svg"
+        width="70"
+        height="70"
+        viewBox="0 0 70 70"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle cx="35" cy="35" r="35" fill="#154DE8" fill-opacity="0.2" />
+      </svg>
+    </div>
+  </div>
+
+  <!-- Phần mới: Form đăng nhập -->
+  <div class="login-form-container">
+    <div class="login-card">
+      <!-- Form đăng nhập -->
+      <div class="login-form-content">
+        <h2 class="form-title">Đăng nhập</h2>
+
+        <form (ngSubmit)="onFormSubmit($event)" novalidate autocomplete="off">
+          <!-- Hiển thị thông tin người dùng (ô tên đăng nhập có icon) -->
+          <div class="user-info-section">
+            <div class="input-wrapper">
+              <span class="input-icon">
+                <!-- Simpler person icon for username -->
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z"
+                    stroke="#9CA3AF"
+                    stroke-width="1.33333"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M3 21c0-3.866 3.582-7 9-7s9 3.134 9 7"
+                    stroke="#9CA3AF"
+                    stroke-width="1.33333"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              <input
+                #autofillInput
+                type="text"
+                name="username"
+                [(ngModel)]="model.userName"
+                class="email-input"
+                placeholder="Tên đăng nhập"
+                aria-label="Tên đăng nhập"
+              />
+            </div>
+          </div>
+
+          <!-- Ô mật khẩu -->
+          <div class="password-input-section">
+            <div class="input-wrapper">
+              <span class="input-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M4 7.33333V4.66667C4 2.45753 5.79086 0.666667 8 0.666667C10.2091 0.666667 12 2.45753 12 4.66667V7.33333M2.66667 7.33333H13.3333C14.0697 7.33333 14.6667 7.93029 14.6667 8.66667V13.3333C14.6667 14.0697 14.0697 14.6667 13.3333 14.6667H2.66667C1.93029 14.6667 1.33333 14.0697 1.33333 13.3333V8.66667C1.33333 7.93029 1.93029 7.33333 2.66667 7.33333Z"
+                    stroke="#9CA3AF"
+                    stroke-width="1.33333"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              <input
+                #autofillPassword
+                [type]="showPassword ? 'text' : 'password'"
+                name="password"
+                [(ngModel)]="model.password"
+                class="password-input"
+                placeholder="Password"
+                aria-label="Password"
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="togglePassword(); $event.preventDefault()"
+                [attr.aria-pressed]="showPassword"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M8 3.33333C11.3333 3.33333 14 8 14 8S11.3333 12.6667 8 12.6667S2 8 2 8S4.66667 3.33333 8 3.33333Z"
+                    stroke="#9CA3AF"
+                    stroke-width="1.33333"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <circle
+                    cx="8"
+                    cy="8"
+                    r="2"
+                    stroke="#9CA3AF"
+                    stroke-width="1.33333"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Ghi nhớ mật khẩu -->
+          <div class="form-options-section">
+            <label class="remember-wrapper">
+              <input
+                type="checkbox"
+                name="remember"
+                class="remember-checkbox"
+              />
+              <span class="remember-label">Nhớ mật khẩu</span>
+            </label>
+            <a href="#" class="forgot-password-link">Quên mật khẩu ?</a>
+          </div>
+
+          <!-- Nút đăng nhập -->
+          <button type="submit" class="login-btn">Đăng nhập</button>
+
+          <!-- Chân trang -->
+          <div class="login-footer">
+            <div class="footer-brand">
+              <div class="footer-logo" aria-hidden="true"></div>
+              <div class="footer-brand-text">SMO-HHK</div>
+            </div>
+            <span class="footer-copyright">© 2025 d2s.com.vn</span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

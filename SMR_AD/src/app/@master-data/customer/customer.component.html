@@ -1,0 +1,454 @@
+<nz-page-header nzBackIcon [nzGhost]="false">
+  <nz-page-header-title>KHÁCH HÀNG</nz-page-header-title>
+
+  <nz-page-header-extra>
+    <div class="header-actions">
+      <div class="search-group">
+        <input
+          class="search-input"
+          type="text"
+          nz-input
+          placeholder="Tìm kiếm"
+          [(ngModel)]="filter.keyWord"
+          (keydown.enter)="search()"
+        />
+        <div class="search-buttons">
+          <button
+            (click)="search()"
+            class="flex !items-center gray-btn icon-only"
+            nzType="default"
+            nz-button
+          >
+            <span nz-icon nzType="search"></span>
+          </button>
+          <button
+            (click)="reset()"
+            class="flex !items-center gray-btn icon-only"
+            nzType="default"
+            nz-button
+          >
+            <span nz-icon nzType="redo"></span>
+          </button>
+        </div>
+      </div>
+      <div class="action-group">
+        <button
+          (click)="openCreateCustomer()"
+          class="!flex !items-center"
+          nzType="default"
+          nz-button
+        >
+          <span nz-icon nzType="plus"></span> Thêm mới
+        </button>
+        <button nz-button nzType="default" (click)="openImportExcel()">
+          <nz-icon nzType="upload"></nz-icon>
+          Nhập Excel
+        </button>
+      </div>
+    </div>
+
+    <ng-template #importTitleTpl>
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+        "
+      >
+        <div style="font-weight: 600; color: rgb(38, 77, 141)">Nhập Excel</div>
+        <button nz-button nzType="default" (click)="closeImport()">Đóng</button>
+      </div>
+    </ng-template>
+  </nz-page-header-extra>
+
+  <nz-page-header-content>
+    <div class="data-table">
+      <nz-table
+        #table
+        nzBordered
+        [nzData]="rightTableData"
+        [nzFrontPagination]="false"
+        [nzScroll]="{
+          y: tableScrollY || undefined,
+          x: tableScrollX || undefined
+        }"
+        [nzLoading]="loading"
+        [nzShowPagination]="false"
+      >
+        <thead>
+          <tr>
+            <th nzAlign="center" style="width: 60px">STT</th>
+            <th style="width: 120px">Mã khách hàng</th>
+            <th style="width: 140px">Khách hàng</th>
+            <th style="width: 120px">Mã số thuế</th>
+            <th style="width: 140px">Giao CHXD</th>
+            <th style="width: 150px">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of rightTableData; let i = index">
+            <td nzAlign="center">
+              {{ (filter.currentPage - 1) * filter.pageSize + i + 1 }}
+            </td>
+            <td>
+              <a href="javascript:void(0)" (click)="openEdit(item)">{{
+                item.customerCode
+              }}</a>
+            </td>
+            <td class="customer-fullname">{{ item.fullName }}</td>
+            <td>{{ item.vatNumber }}</td>
+            <td>
+              <div *ngFor="let chxd of item.giaoCHXD_List">
+                {{ chxd }}
+              </div>
+            </td>
+            <td>
+              <button
+                (click)="openCreateAccount(item.customerCode)"
+                class="!flex !items-center"
+                nzType="default"
+                nz-button
+              >
+                <span nz-icon nzType="plus-circle"></span> Tạo tài khoản
+              </button>
+              <ng-container *ngIf="item.accounts?.length">
+                <div class="accounts-list">
+                 
+                  <span
+                    class="account-inline"
+                    *ngFor="let ac of item.accounts; let idx = index"
+                  >
+                  <a 
+          href="javascript:void(0)" 
+          (click)="openEditAccount(ac)"
+          class="account-link"
+        >
+                    [{{ ac.customerCode }}] {{ ac.userName
+                    }}<span *ngIf="idx < item.accounts.length - 1">, </span>
+                    </a>
+                  </span>
+                </div>
+              </ng-container>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+
+    <nz-pagination
+      class="pagination-spacing"
+      [nzPageIndex]="filter.currentPage"
+      [nzTotal]="paginationResult.totalRecord"
+      [nzPageSize]="filter.pageSize"
+      [nzPageSizeOptions]="[10, 20, 30, 50, 100]"
+      [nzShowSizeChanger]="true"
+      (nzPageIndexChange)="onPageChange($event)"
+      (nzPageSizeChange)="onPageSizeChange($event)"
+    >
+    </nz-pagination>
+  </nz-page-header-content>
+</nz-page-header>
+
+<!-- Import Modal -->
+<nz-modal
+  [(nzVisible)]="importVisible"
+  [nzTitle]="importTitleTpl"
+  [nzFooter]="importModalFooter"
+  (nzOnCancel)="closeImport()"
+  [nzMaskClosable]="false"
+  [nzClosable]="false"
+>
+  <ng-container *nzModalContent>
+    <div class="modal-item" style="margin-bottom: 20px">
+      <label style="display: block; margin-bottom: 8px; font-weight: 500"
+        >Chọn file Excel</label
+      >
+
+      <nz-upload
+        nzType="drag"
+        [(nzFileList)]="fileList"
+        [nzBeforeUpload]="beforeUpload"
+        (nzChange)="handleFileChange($event)"
+      >
+        <p class="ant-upload-drag-icon">
+          <nz-icon nzType="inbox"></nz-icon>
+        </p>
+        <p class="ant-upload-text">Kéo & thả file vào đây hoặc bấm để chọn</p>
+        <p class="ant-upload-hint">Hỗ trợ định dạng .xlsx, .xls</p>
+      </nz-upload>
+
+      <div
+        *ngIf="importMessage"
+        class="import-message"
+        style="
+          margin-top: 10px;
+          padding: 8px;
+          background: #f0f8ff;
+          border-radius: 4px;
+        "
+      >
+        {{ importMessage }}
+      </div>
+
+      <div style="margin-top: 15px">
+        <a href="CustomerTemplate.xlsx" download="CustomerTemplate.xlsx">
+          <nz-icon nzType="download"></nz-icon>
+          Tải xuống biểu mẫu
+        </a>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #importModalFooter>
+    <button
+      nz-button
+      nzType="default"
+      [disabled]="!selectedFileObj"
+      (click)="submitImport()"
+    >
+      <nz-icon nzType="check"></nz-icon> Xác nhận
+    </button>
+  </ng-template>
+</nz-modal>
+
+<!-- Account Drawer -->
+<nz-drawer
+  [nzMask]="true"
+  [nzWidth]="drawerWidth"
+  [nzVisible]="visible"
+  nzPlacement="right"
+  [nzTitle]="isEditAccount ? 'Cập nhật tài khoản' : 'Thêm mới tài khoản'"
+  [nzExtra]="extra"
+  (nzOnClose)="close()"
+  [nzClosable]="false"
+>
+  <ng-container *nzDrawerContent>
+    <form nz-form nzLayout="vertical" [formGroup]="accountForm">
+      <nz-form-item>
+        <nz-form-label>Mã khách hàng</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="customerCode" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzRequired>Tên đăng nhập</nz-form-label>
+        <nz-form-control nzErrorTip="Vui lòng nhập tên đăng nhập">
+          <input
+            nz-input
+            formControlName="userName"
+            placeholder="Nhập tên đăng nhập"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzRequired>Tên đầy đủ</nz-form-label>
+        <nz-form-control nzErrorTip="Vui lòng nhập tên đầy đủ">
+          <input
+            nz-input
+            formControlName="fullName"
+            placeholder="Nhập tên đầy đủ"
+          />
+        </nz-form-control>
+      </nz-form-item>
+     
+
+      <nz-form-item *ngIf="!isEditAccount">
+        <nz-form-label nzRequired>Mật khẩu</nz-form-label>
+        <nz-form-control nzErrorTip="Vui lòng nhập mật khẩu">
+          <input
+            nz-input
+            type="password"
+            formControlName="passWord"
+            placeholder="Nhập mật khẩu"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Số điện thoại</nz-form-label>
+        <nz-form-control>
+          <input
+            nz-input
+            formControlName="phoneNumber"
+            placeholder="Nhập số điện thoại"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Email</nz-form-label>
+        <nz-form-control nzErrorTip="Email không hợp lệ">
+          <input
+            nz-input
+            type="email"
+            formControlName="email"
+            placeholder="Nhập email"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Địa chỉ</nz-form-label>
+        <nz-form-control>
+          <input
+            nz-input
+            formControlName="address"
+            placeholder="Nhập địa chỉ"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Trạng thái</nz-form-label>
+        <nz-form-control>
+          <nz-radio-group formControlName="isActive">
+            <label nz-radio [nzValue]="true">Kích hoạt</label>
+            <label nz-radio [nzValue]="false">Khóa</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-drawer>
+
+<!-- Customer Drawer -->
+<nz-drawer
+  [nzMask]="true"
+  [nzWidth]="drawerWidth"
+  [nzVisible]="visibleCustomer"
+  nzPlacement="right"
+  [nzTitle]="isEdit ? 'Cập nhật' : 'Thêm mới'"
+  [nzExtra]="extraCustomer"
+  (nzOnClose)="closeCustomer()"
+  [nzClosable]="false"
+>
+  <ng-container *nzDrawerContent>
+    <form nz-form nzLayout="vertical" [formGroup]="customerForm">
+      <nz-form-item>
+        <nz-form-label nzRequired>Mã khách hàng</nz-form-label>
+        <nz-form-control nzErrorTip="Vui lòng nhập mã khách hàng">
+          <input
+            nz-input
+            formControlName="customerCode"
+            placeholder="Nhập mã khách hàng"
+            
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzRequired>Tên đầy đủ</nz-form-label>
+        <nz-form-control nzErrorTip="Vui lòng nhập tên đầy đủ">
+          <input
+            nz-input
+            formControlName="fullName"
+            placeholder="Nhập tên đầy đủ"
+          />
+        </nz-form-control>
+      </nz-form-item>
+       <nz-form-item>
+        <nz-form-label>Tên ngắn gọn</nz-form-label>
+        <nz-form-control >
+          <input
+            nz-input
+            formControlName="shortName"
+            placeholder="Nhập tên ngắn gọn"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Mã số thuế</nz-form-label>
+        <nz-form-control>
+          <input
+            nz-input
+            formControlName="vatNumber"
+            placeholder="Nhập mã số thuế"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Email</nz-form-label>
+        <nz-form-control nzErrorTip="Email không hợp lệ">
+          <input
+            nz-input
+            type="email"
+            formControlName="email"
+            placeholder="Nhập email"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Số điện thoại</nz-form-label>
+        <nz-form-control>
+          <input
+            nz-input
+            formControlName="phone"
+            placeholder="Nhập số điện thoại"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Địa chỉ</nz-form-label>
+        <nz-form-control>
+          <input
+            nz-input
+            formControlName="address"
+            placeholder="Nhập địa chỉ"
+          />
+        </nz-form-control>
+      </nz-form-item>
+    <nz-form-item>
+        <nz-form-label>Giao CHXD</nz-form-label>
+        <nz-form-control>
+          <nz-select
+            nzMode="tags"
+            formControlName="giaoCHXD"
+            nzPlaceHolder="Nhập và Enter để thêm CHXD"
+            [nzTokenSeparators]="[',']"
+            [nzDropdownClassName]="'hide-tag-dropdown'" >
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Trạng thái</nz-form-label>
+        <nz-form-control>
+          <nz-radio-group formControlName="isActive">
+            <label nz-radio [nzValue]="true">Kích hoạt</label>
+            <label nz-radio [nzValue]="false">Khóa</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-drawer>
+
+<!-- Templates -->
+<ng-template #extra>
+  <nz-space>
+    <button *nzSpaceItem nz-button nzType="default" (click)="submit()">
+      <span nz-icon nzType="save"></span> Lưu
+    </button>
+    <button *nzSpaceItem nz-button nzType="default" (click)="close()">
+      <span nz-icon nzType="close"></span> Hủy
+    </button>
+  </nz-space>
+</ng-template>
+
+<ng-template #extraCustomer>
+  <nz-space>
+    <button *nzSpaceItem nz-button nzType="default" (click)="submitCustomer()">
+      <span nz-icon nzType="save"></span> Lưu
+    </button>
+    <button *nzSpaceItem nz-button nzType="default" (click)="closeCustomer()">
+      <span nz-icon nzType="close"></span> Đóng
+    </button>
+  </nz-space>
+</ng-template>

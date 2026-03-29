@@ -1,0 +1,153 @@
+/* Remove border/background from prev/next pagination buttons */
+:host ::ng-deep .ant-pagination-prev,
+:host ::ng-deep .ant-pagination-next {
+  button {
+    border: none !important;
+    background: transparent !important;
+    color: rgba(0, 0, 0, 0.65) !important;
+    padding: 4px 8px !important;
+    height: auto !important;
+    width: auto !important;
+    min-width: unset !important;
+    justify-content: unset !important;
+
+    &:hover {
+      color: #1890ff !important;
+      background: transparent !important;
+      border: none !important;
+    }
+  }
+
+  .ant-pagination-item-link {
+    border: none !important;
+    background: transparent !important;
+    color: rgba(0, 0, 0, 0.65) !important;
+  }
+
+  &:hover .ant-pagination-item-link {
+    color: #1890ff !important;
+    border: none !important;
+  }
+}
+
+/* Alternative approach: target via pagination-spacing class */
+::ng-deep .pagination-spacing .ant-pagination-prev button,
+::ng-deep .pagination-spacing .ant-pagination-next button,
+::ng-deep .pagination-spacing .ant-pagination-prev .ant-pagination-item-link,
+::ng-deep .pagination-spacing .ant-pagination-next .ant-pagination-item-link {
+  border: none !important;
+  background: transparent !important;
+  color: rgba(0, 0, 0, 0.65) !important;
+  padding: 4px 8px !important;
+  height: auto !important;
+  width: auto !important;
+  min-width: unset !important;
+  justify-content: unset !important;
+}
+
+::ng-deep .pagination-spacing .ant-pagination-prev button:hover,
+::ng-deep .pagination-spacing .ant-pagination-next button:hover,
+::ng-deep
+  .pagination-spacing
+  .ant-pagination-prev:hover
+  .ant-pagination-item-link,
+::ng-deep
+  .pagination-spacing
+  .ant-pagination-next:hover
+  .ant-pagination-item-link {
+  color: #1890ff !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+// Allow table cells to expand beyond initial width based on content
+:host ::ng-deep .ant-table-cell {
+  word-break: break-word !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+}
+
+// Allow links and text inside cells to wrap
+:host ::ng-deep .ant-table-cell a,
+:host ::ng-deep .ant-table-cell span {
+  word-break: break-word !important;
+  overflow: visible !important;
+}
+
+/* Ngăn pagination xuống dòng */
+::ng-deep .pagination-spacing {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  overflow-x: auto !important; /* Cho phép scroll ngang nếu quá dài */
+  white-space: nowrap !important;
+}
+
+::ng-deep .pagination-spacing .ant-pagination {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+}
+
+/* Giảm khoảng cách giữa các items */
+::ng-deep .pagination-spacing .ant-pagination-item,
+::ng-deep .pagination-spacing .ant-pagination-prev,
+::ng-deep .pagination-spacing .ant-pagination-next,
+::ng-deep .pagination-spacing .ant-pagination-jump-prev,
+::ng-deep .pagination-spacing .ant-pagination-jump-next {
+  margin: 0 2px !important; /* Giảm margin */
+  min-width: 28px !important; /* Giảm width tối thiểu */
+}
+
+/* Giảm kích thước font và padding cho mobile */
+@media (max-width: 767px) {
+  ::ng-deep .pagination-spacing .ant-pagination-item,
+  ::ng-deep .pagination-spacing .ant-pagination-prev,
+  ::ng-deep .pagination-spacing .ant-pagination-next {
+    font-size: 12px !important;
+    padding: 0 4px !important;
+    min-width: 24px !important;
+    height: 24px !important;
+    line-height: 22px !important;
+  }
+  
+  ::ng-deep .pagination-spacing .ant-pagination-item a {
+    padding: 0 4px !important;
+  }
+  
+  /* Giảm kích thước dropdown page size */
+  ::ng-deep .pagination-spacing .ant-pagination-options {
+    margin-left: 4px !important;
+  }
+  
+  ::ng-deep .pagination-spacing .ant-select-selector {
+    font-size: 12px !important;
+    padding: 0 4px !important;
+    height: 24px !important;
+  }
+}
+
+/* Alternative approach: target via pagination-spacing class */
+::ng-deep .pagination-spacing .ant-pagination-prev button,
+::ng-deep .pagination-spacing .ant-pagination-next button,
+::ng-deep .pagination-spacing .ant-pagination-prev .ant-pagination-item-link,
+::ng-deep .pagination-spacing .ant-pagination-next .ant-pagination-item-link {
+  border: none !important;
+  background: transparent !important;
+  color: rgba(0, 0, 0, 0.65) !important;
+  padding: 4px 8px !important;
+  height: auto !important;
+  width: auto !important;
+  min-width: unset !important;
+  justify-content: unset !important;
+}
+
+::ng-deep .pagination-spacing .ant-pagination-prev button:hover,
+::ng-deep .pagination-spacing .ant-pagination-next button:hover,
+::ng-deep .pagination-spacing .ant-pagination-prev:hover .ant-pagination-item-link,
+::ng-deep .pagination-spacing .ant-pagination-next:hover .ant-pagination-item-link {
+  color: #1890ff !important;
+  background: transparent !important;
+  border: none !important;
+}

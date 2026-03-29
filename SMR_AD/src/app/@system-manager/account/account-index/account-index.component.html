@@ -1,0 +1,153 @@
+<div class="account-index-page">
+  <nz-page-header nzBackIcon [nzGhost]="false">
+    <nz-page-header-title>TÀI KHOẢN</nz-page-header-title>
+    <nz-page-header-subtitle *ngIf="selectedOrgName">
+      Tổ chức: {{ selectedOrgName }}
+    </nz-page-header-subtitle>
+
+    <nz-page-header-extra>
+      <div class="header-actions">
+        <div class="search-group">
+          <input
+            class="search-input"
+            type="text"
+            nz-input
+            placeholder="Tìm kiếm"
+            [(ngModel)]="filter.keyWord"
+            (keyup.enter)="search()"
+          />
+          <div class="search-buttons">
+            <button
+              (click)="search()"
+              class="flex !items-center gray-btn icon-only"
+              nzType="default"
+              nz-button
+            >
+              <span nz-icon nzType="search"></span>
+            </button>
+            <button
+              (click)="reset()"
+              class="flex !items-center gray-btn icon-only"
+              nzType="default"
+              nz-button
+            >
+              <span nz-icon nzType="redo"></span>
+            </button>
+          </div>
+        </div>
+        <div class="action-group">
+          <button
+            (click)="openCreate()"
+            class="!flex !items-center"
+            nzType="default"
+            nz-button
+          >
+            <span nz-icon nzType="plus"></span> Thêm mới
+          </button>
+        </div>
+      </div>
+    </nz-page-header-extra>
+
+    <nz-page-header-content>
+      <div class="data-table">
+        <nz-table
+          #lstAccount
+          nzBordered
+          class="account-table"
+          [nzData]="paginationResult.data"
+          [nzFrontPagination]="false"
+          [nzScroll]="{
+            y: tableScrollY || undefined,
+            x: tableScrollX || undefined
+          }"
+          [nzShowPagination]="false"
+        >
+          <thead>
+            <tr>
+              <th style="width: 80px" nzAlign="center">STT</th>
+              <th style="width: auto">Nhóm tài khoản</th>
+              <th style="width: auto">Tên tài khoản</th>
+              <th style="width: auto">Tên đầy đủ</th>
+              <th style="width: auto" nzAlign="center">Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let data of lstAccount.data; let i = index"
+              (click)="openEdit(data.userName)"
+            >
+              <td nzAlign="center">
+                {{
+                  (paginationResult.currentPage - 1) *
+                    paginationResult.pageSize +
+                    i +
+                    1
+                }}
+              </td>
+              <td>
+                <div
+                  class="account-group-item"
+                  *ngFor="let item of data?.accountGroups"
+                >
+                  <a (click)="handleAccountGroup(item.id)" [title]="item?.name">
+                    {{ item?.name }}
+                  </a>
+                </div>
+              </td>
+              <td>
+                <a
+                  (click)="$event.stopPropagation(); openEdit(data.userName)"
+                  [title]="data.userName"
+                >
+                  {{ data.userName }}
+                </a>
+              </td>
+              <td [title]="data.fullName">{{ data.fullName }}</td>
+              <td nzAlign="center">
+                <nz-tag nzColor="success" *ngIf="data.isActive">
+                  <nz-icon nzType="check-circle" />
+                  <span>Kích hoạt</span>
+                </nz-tag>
+                <nz-tag nzColor="error" *ngIf="!data.isActive">
+                  <nz-icon nzType="close-circle" />
+                  <span>Khoá</span>
+                </nz-tag>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </div>
+
+      <nz-pagination
+        class="pagination-spacing"
+        [nzPageIndex]="filter.currentPage"
+        [nzTotal]="paginationResult.totalRecord"
+        [nzPageSize]="filter.pageSize"
+        [nzPageSizeOptions]="[10, 20, 30, 50, 100]"
+        [nzShowSizeChanger]="true"
+        nzShowQuickJumper
+        (nzPageIndexChange)="onPageChange($event)"
+        (nzPageSizeChange)="onPageSizeChange($event)"
+      >
+      </nz-pagination>
+    </nz-page-header-content>
+  </nz-page-header>
+
+  <app-account-create
+    [close]="close.bind(this)"
+    [reset]="loadInit.bind(this)"
+    [visible]="showCreate"
+  ></app-account-create>
+  <app-account-edit
+    [userName]="userName"
+    [close]="close.bind(this)"
+    [reset]="loadInit.bind(this)"
+    [visible]="showEdit"
+  ></app-account-edit>
+  <app-account-group-edit
+    [id]="idDetail"
+    [close]="close.bind(this)"
+    [reset]="loadInit.bind(this)"
+    [visible]="showEditAcg"
+  ></app-account-group-edit>
+</div>

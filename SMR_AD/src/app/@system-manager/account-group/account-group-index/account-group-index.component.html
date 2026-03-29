@@ -1,0 +1,132 @@
+<nz-page-header nzBackIcon>
+  <nz-page-header-title>NHÓM TÀI KHOẢN</nz-page-header-title>
+  <nz-page-header-extra>
+    <div class="header-actions">
+      <div class="search-group">
+        <input
+          class="search-input"
+          type="text"
+          nz-input
+          placeholder="Tìm kiếm"
+          [(ngModel)]="filter.keyWord"
+          (keyup.enter)="search()"
+        />
+        <div class="search-buttons">
+          <button
+            (click)="search()"
+            class="flex !items-center gray-btn icon-only"
+            nzType="default"
+            nz-button
+          >
+            <span nz-icon nzType="search"></span>
+          </button>
+          <button
+            (click)="reset()"
+            class="flex !items-center gray-btn icon-only"
+            nzType="default"
+            nz-button
+          >
+            <span nz-icon nzType="redo"></span>
+          </button>
+        </div>
+      </div>
+      <div class="action-group">
+        <button
+          (click)="openCreate()"
+          class="!flex !items-center"
+          nzType="default"
+          nz-button
+        >
+          <span nz-icon nzType="plus"></span> Thêm mới
+        </button>
+      </div>
+    </div>
+  </nz-page-header-extra>
+  <nz-page-header-content>
+    <div class="data-table">
+      <nz-table
+        #table
+        nzBordered
+        [nzData]="paginationResult.data"
+        [nzFrontPagination]="false"
+        [nzScroll]="{
+          y: tableScrollY || undefined,
+          x: tableScrollX || undefined
+        }"
+        [nzLoading]="loading"
+        [nzShowPagination]="false"
+      >
+        <thead>
+          <tr>
+            <th style="width: 60px" nzAlign="center">STT</th>
+            <th style="width: 150px">Tên nhóm tài khoản</th>
+            <th style="width: 150px">Ghi chú</th>
+            <th style="width: 130px">Số lượng tài khoản</th>
+            <th style="width: 100px" nzAlign="center">Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let data of table.data; let i = index"
+            (click)="openEdit(data.id)"
+          >
+            <td style="text-align: center">
+              {{
+                (paginationResult.currentPage - 1) * paginationResult.pageSize +
+                  i +
+                  1
+              }}
+            </td>
+            <td>
+              <a (click)="$event.stopPropagation(); openEdit(data.id)">{{
+                data.name
+              }}</a>
+            </td>
+            <td>{{ data.notes }}</td>
+            <td nzAlign="left">{{ data.totalAccount }}</td>
+            <td nzAlign="center">
+              <nz-tag nzColor="success" *ngIf="data.isActive">
+                <nz-icon nzType="check-circle" />
+                <span>Kích hoạt</span>
+              </nz-tag>
+              <nz-tag nzColor="error" *ngIf="!data.isActive">
+                <nz-icon nzType="close-circle" />
+                <span>Khoá</span>
+              </nz-tag>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+
+    <!-- Custom Pagination -->
+    <nz-pagination
+      class="pagination-spacing"
+      [nzPageIndex]="filter.currentPage"
+      [nzTotal]="paginationResult.totalRecord"
+      [nzPageSize]="filter.pageSize"
+      [nzPageSizeOptions]="[10, 20, 30, 50, 100]"
+      [nzShowSizeChanger]="true"
+      nzShowQuickJumper
+      (nzPageIndexChange)="onPageChange($event)"
+      (nzPageSizeChange)="onPageSizeChange($event)"
+    >
+    </nz-pagination>
+  </nz-page-header-content>
+</nz-page-header>
+
+<app-account-group-create
+  [loading]="loading"
+  [close]="close.bind(this)"
+  [reset]="loadInit.bind(this)"
+  [visible]="showCreate"
+></app-account-group-create>
+
+<app-account-group-edit
+  [loading]="loading"
+  [id]="idDetail"
+  [close]="close.bind(this)"
+  [reset]="loadInit.bind(this)"
+  [visible]="showEdit"
+>
+</app-account-group-edit>

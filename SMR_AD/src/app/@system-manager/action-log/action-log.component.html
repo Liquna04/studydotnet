@@ -1,0 +1,199 @@
+<nz-page-header nzBackIcon>
+  <nz-page-header-title>NHÓM TÀI KHOẢN</nz-page-header-title>
+  <nz-page-header-subtitle>Danh sách nhóm tài khoản</nz-page-header-subtitle>
+  <nz-page-header-extra>
+    <div class="header-actions">
+      <div class="filter-controls">
+        <nz-range-picker
+          nzFormat="dd/MM/YYYY HH:mm:ss"
+          [nzShowTime]="true"
+          [(ngModel)]="filter.selectedRange"
+          (ngModelChange)="onChange($event)"
+        ></nz-range-picker>
+        <nz-select
+          style="width: 150px"
+          nzShowSearch
+          nzAllowClear
+          nzPlaceHolder="TT trả về"
+          [(ngModel)]="filter.statusCode"
+        >
+          <nz-option
+            *ngFor="let item of listStatusCode"
+            [nzValue]="item.code"
+            [nzLabel]="item.code"
+          ></nz-option>
+        </nz-select>
+      </div>
+      <div class="search-group">
+        <input
+          class="search-input"
+          type="text"
+          nz-input
+          placeholder="Tìm kiếm"
+          [(ngModel)]="filter.keyWord"
+          (keyup.enter)="search()"
+        />
+        <div class="search-buttons">
+          <button
+            (click)="search()"
+            class="flex !items-center gray-btn"
+            nzType="default"
+            nz-button
+          >
+            <span nz-icon nzType="search"></span>
+          </button>
+          <button
+            (click)="reset()"
+            class="flex !items-center gray-btn"
+            nzType="default"
+            nz-button
+          >
+            <span nz-icon nzType="redo"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nz-page-header-extra>
+  <nz-page-header-content class="main-content">
+    <nz-table
+      [nzShowPagination]="false"
+      class="auto-scroll-table"
+      [nzFrontPagination]="false"
+      #headerTable
+      [nzData]="paginationResult.data"
+      [nzScroll]="{ y: 'calc(100vh - 244px)' }"
+    >
+      <thead>
+        <tr>
+          <th style="width: 60px">STT</th>
+          <th style="width: auto">TK thao tác</th>
+          <th style="width: auto">Tên url</th>
+          <th style="width: auto">Thời gian request</th>
+          <th style="width: auto">Thời gian trả về</th>
+          <th style="width: auto" nzAlign="center">Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let data of headerTable.data; let i = index"
+          (dblclick)="openEdit(data)"
+        >
+          <td>
+            {{
+              (paginationResult.currentPage - 1) * paginationResult.pageSize +
+                i +
+                1
+            }}
+          </td>
+          <td>{{ data.userName }}</td>
+          <td>
+            <a (click)="openEdit(data)">{{ data.actionUrl }}</a>
+          </td>
+          <td>{{ data.requestTime | date : "dd/MM/yyyy hh:mm:ss" }}</td>
+          <td>{{ data.responseTime | date : "dd/MM/yyyy hh:mm:ss" }}</td>
+          <td nzAlign="center">
+            {{ data.statusCode }}
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-page-header-content>
+  <nz-page-header-content class="footer-content">
+    <div
+      *ngIf="paginationResult?.data"
+      class="flex justify-end p-[10px] border-t border-custom-gray border-solid"
+    >
+      <nz-pagination
+        nzShowSizeChanger
+        [nzShowTotal]="totalTemplate"
+        [nzPageIndex]="filter.currentPage"
+        [nzTotal]="paginationResult.totalRecord"
+        [nzPageSize]="filter.pageSize"
+        (nzPageIndexChange)="pageIndexChange($event)"
+        (nzPageSizeChange)="pageSizeChange($event)"
+      ></nz-pagination>
+      <ng-template #totalTemplate let-total
+        >Tổng số {{ paginationResult.totalRecord }} mục</ng-template
+      >
+    </div>
+  </nz-page-header-content>
+</nz-page-header>
+
+<nz-drawer
+  *ngIf="dataDetail"
+  [nzMask]="!edit"
+  nzSize="large"
+  [nzVisible]="visible"
+  nzPlacement="right"
+  [nzTitle]="'Chi tiết hành động'"
+  (nzOnClose)="close()"
+  [nzExtra]="extra"
+>
+  <ng-container *nzDrawerContent>
+    <form nz-form nzLayout="vertical">
+      <div class="item_form">
+        <label>Mã log</label>
+        <input
+          nz-input
+          placeholder="Basic usage"
+          [value]="dataDetail.id"
+          type="number"
+          readonly
+        />
+      </div>
+      <div class="item_form">
+        <label>Người thao tác</label>
+        <input
+          nz-input
+          placeholder="Basic usage"
+          [value]="dataDetail.userName"
+          type="text"
+          readonly
+        />
+      </div>
+      <div class="item_form">
+        <label>Đường dẫn thao tác</label>
+        <input
+          nz-input
+          placeholder="Basic usage"
+          [value]="dataDetail.actionUrl"
+          type="text"
+          readonly
+        />
+      </div>
+      <div class="item_form">
+        <label
+          >Dữ liệu gửi yêu cầu -
+          {{ dataDetail.requestTime | date : "dd/MM/yyyy hh:mm:ss" }}</label
+        >
+        <pre
+          [innerHTML]="dataDetail.requestData | prettyPrint : [true, 3]"
+        ></pre>
+      </div>
+      <div class="item_form">
+        <label
+          >Dữ liệu trả về -
+          {{ dataDetail.responseTime | date : "dd/MM/yyyy hh:mm:ss" }}</label
+        >
+        <pre
+          [innerHTML]="dataDetail.responseData | prettyPrint : [true, 3]"
+        ></pre>
+      </div>
+    </form>
+  </ng-container>
+</nz-drawer>
+<ng-template #extra>
+  <nz-space>
+    <button
+      *nzSpaceItem
+      nz-button
+      nzType="default"
+      nzType="primary"
+      class="!flex !items-center"
+      nzDanger
+      (click)="close()"
+    >
+      <span nz-icon nzType="close-circle" nzTheme="outline"></span>Huỷ
+    </button>
+  </nz-space>
+</ng-template>

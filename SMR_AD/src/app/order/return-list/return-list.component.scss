@@ -1,0 +1,221 @@
+/* ==========================================================================
+   1. DESKTOP STYLES (Mặc định)
+   ========================================================================== */
+
+/* Container chính trên Header: Căn giữa Dropdown và Search */
+.header-actions {
+  display: flex;
+  align-items: center; /* Căn giữa trục dọc */
+  gap: 16px;
+  width: 100%;
+
+  /* 1. Phần Dropdown (Giữ nguyên hoặc ép cao 40px cho chắc chắn) */
+  .view-mode-select {
+    flex-shrink: 0;
+    
+    nz-select {
+      width: 160px;
+      /* Nếu nz-select của bạn đang là size 'default', dòng dưới sẽ ép nó to lên */
+      height: 40px !important; 
+    }
+
+    /* Hack style nội bộ của Antd để dropdown cao lên 40px (nếu cần) */
+    ::ng-deep .ant-select-selector {
+      height: 40px !important;
+      align-items: center;
+      display: flex;
+    }
+    ::ng-deep .ant-select-selection-item {
+      line-height: 38px !important; /* height - 2px border */
+    }
+  }
+
+  /* 2. Phần Tìm kiếm & Nút (CHO TO LÊN) */
+  .search-group {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    
+    .search-input {
+      /* Tăng chiều cao lên 40px */
+      height: 40px !important;      
+      line-height: 40px !important; 
+      margin-right: 8px;            
+      border-radius: 4px;
+      min-width: 250px;
+      flex: 1;
+    }
+
+    .search-buttons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* Tăng kích thước nút lên 40x40 */
+        height: 40px !important;
+        width: 40px !important;
+        padding: 0;
+        border-radius: 4px;
+        
+        span {
+          font-size: 16px; /* Tăng size icon lên chút cho cân đối với nút to */
+        }
+      }
+    }
+  }
+}
+/* Hàng nút chức năng bên dưới (Tạo mới, Gửi, Hủy...) */
+.actions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+
+  button {
+    min-width: 140px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 32px; /* Đồng bộ chiều cao */
+  }
+}
+
+/* ==========================================================================
+   2. CUSTOM ANT DESIGN COMPONENTS
+   ========================================================================== */
+
+
+
+/* Style cho Phân trang (Pagination) - Đã gộp gọn code lặp */
+::ng-deep .pagination-spacing {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  overflow-x: auto !important;
+  white-space: nowrap !important;
+  margin-top: 16px;
+  justify-content: flex-end; /* Căn phải cho đẹp trên Desktop */
+
+  .ant-pagination-item,
+  .ant-pagination-prev,
+  .ant-pagination-next,
+  .ant-pagination-jump-prev,
+  .ant-pagination-jump-next {
+    margin: 0 4px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    line-height: 30px !important; /* Căn giữa số trang */
+    border-radius: 4px;
+  }
+
+  /* Nút Prev/Next trong suốt */
+  .ant-pagination-prev button,
+  .ant-pagination-next button {
+    border: none !important;
+    background: transparent !important;
+    color: rgba(0, 0, 0, 0.65) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      color: #1890ff !important;
+    }
+  }
+}
+
+/* ==========================================================================
+   3. MEDIA QUERIES (Responsive)
+   ========================================================================== */
+
+/* Tablet rules: 769px–1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+  :host ::ng-deep .ant-page-header-heading-extra {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  /* Trên Tablet: Header Actions xếp dọc */
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch; /* Kéo full chiều ngang */
+    gap: 12px;
+  }
+
+  .search-group {
+    width: 100%;
+    .search-input { width: 100%; } /* Input full width */
+  }
+
+  .actions-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    button {
+      flex: 1; /* Chia đều nút */
+      min-width: 140px;
+    }
+  }
+}
+
+/* Mobile rules: <=768px */
+@media (max-width: 768px) {
+  :host ::ng-deep .ant-page-header-heading-extra {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .search-group {
+    width: 100%;
+    .search-input { width: 100%; }
+  }
+
+  /* Nút xếp chồng lên nhau (1 cột) */
+  .actions-bar {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+
+    button {
+      width: 100% !important;
+      min-width: unset !important;
+    }
+  }
+
+  /* Giảm cỡ chữ bảng trên mobile */
+  :host ::ng-deep .style-data-table {
+    .ant-table { font-size: 12px !important; }
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td {
+      font-size: 12px !important;
+      padding: 8px !important;
+    }
+  }
+
+  /* Pagination nhỏ lại trên mobile */
+  ::ng-deep .pagination-spacing {
+    justify-content: center;
+    
+    .ant-pagination-item,
+    .ant-pagination-prev,
+    .ant-pagination-next {
+      font-size: 12px !important;
+      padding: 0 !important;
+      min-width: 28px !important;
+      height: 28px !important;
+      line-height: 26px !important;
+    }
+  }
+}

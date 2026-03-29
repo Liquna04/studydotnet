@@ -1,0 +1,27 @@
+/* Drawer header actions layout (share with account edit) */
+.drawer-header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.drawer-header-actions .primary-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+@media (max-width: 480px) {
+  .drawer-header-actions {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+  }
+}
+
+/* Remove Tabs overflow "more" button and enable horizontal scroll for tab headers (scoped) */
+:host ::ng-deep {
+  .ant-tabs-nav-more {
+    display: none !important;
+  }
+}

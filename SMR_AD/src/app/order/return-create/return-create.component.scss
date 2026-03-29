@@ -1,0 +1,150 @@
+.col-box {
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+}
+
+/* Add dividing line between left and right columns */
+.order-create-container nz-col:nth-child(2) {
+  padding-left: 8px;
+  border-left: 1px solid #e8e8e8;
+}
+
+.Return-create-container nz-col:nth-child(2) {
+  padding-left: 8px;
+  border-left: 1px solid #e8e8e8;
+}
+
+.order-create-container nz-col:nth-child(2) .col-box,
+.Return-create-container nz-col:nth-child(2) .col-box {
+  border-left: none;
+}
+
+.items-section .items-header {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.item-search-modal .modal-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0 12px;
+}
+
+.item-search-modal .modal-title {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-size: medium;
+}
+
+.added-pill {
+  background: #f5f5f5;
+  border-color: #e8e8e8;
+  color: #8c8c8c;
+}
+
+/* Hide ant table pagination in items modal if present */
+.items-section .ant-table-pagination {
+  display: none !important;
+}
+
+.plain-items-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.plain-items-table th,
+.plain-items-table td {
+  border: 1px solid #f0f0f0;
+  padding: 12px;
+  vertical-align: middle;
+}
+.plain-items-table thead th {
+  background: #fafafa;
+  font-weight: 700;
+}
+
+.plain-items-table tfoot {
+  display: none;
+}
+
+.order-form .field-input,
+.order-form nz-date-picker.field-input,
+.order-form nz-select.field-input {
+  width: 100%;
+  min-height: 40px;
+  box-sizing: border-box;
+}
+
+.order-form nz-form-item {
+  margin-bottom: 12px;
+}
+
+.order-form nz-form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+/* Remove border/background from prev/next pagination buttons */
+:host ::ng-deep .ant-pagination-prev,
+:host ::ng-deep .ant-pagination-next {
+  button {
+    border: none !important;
+    background: transparent !important;
+    color: rgba(0, 0, 0, 0.65) !important;
+    padding: 4px 8px !important;
+    height: auto !important;
+    width: auto !important;
+    min-width: unset !important;
+    justify-content: unset !important;
+
+    &:hover {
+      color: #1890ff !important;
+      background: transparent !important;
+      border: none !important;
+    }
+  }
+
+  .ant-pagination-item-link {
+    border: none !important;
+    background: transparent !important;
+    color: rgba(0, 0, 0, 0.65) !important;
+  }
+
+  &:hover .ant-pagination-item-link {
+    color: #1890ff !important;
+    border: none !important;
+  }
+}
+
+/* Alternative approach: target via pagination-spacing class */
+::ng-deep .pagination-spacing .ant-pagination-prev button,
+::ng-deep .pagination-spacing .ant-pagination-next button,
+::ng-deep .pagination-spacing .ant-pagination-prev .ant-pagination-item-link,
+::ng-deep .pagination-spacing .ant-pagination-next .ant-pagination-item-link {
+  border: none !important;
+  background: transparent !important;
+  color: rgba(0, 0, 0, 0.65) !important;
+  padding: 4px 8px !important;
+  height: auto !important;
+  width: auto !important;
+  min-width: unset !important;
+  justify-content: unset !important;
+}
+
+::ng-deep .pagination-spacing .ant-pagination-prev button:hover,
+::ng-deep .pagination-spacing .ant-pagination-next button:hover,
+::ng-deep
+  .pagination-spacing
+  .ant-pagination-prev:hover
+  .ant-pagination-item-link,
+::ng-deep
+  .pagination-spacing
+  .ant-pagination-next:hover
+  .ant-pagination-item-link {
+  color: #1890ff !important;
+  background: transparent !important;
+  border: none !important;
+}

@@ -1,0 +1,175 @@
+<p>realtime-report works!</p>
+<nz-page-header class="site-page-header" nzBackIcon>
+  <nz-page-header-title>BÁO CÁO ĐƠN HÀNG THEO THỜI GIAN THỰC</nz-page-header-title>
+
+  <nz-page-header-content>
+    <div class="toolbar-actions">
+      <button nz-button nzType="text" (click)="onPreview()" [nzLoading]="isLoadingPreview">
+        <span nz-icon nzType="search"></span> Xem trước
+      </button>
+
+      <button nz-button nzType="text" (click)="onExportExcel()">
+        <span nz-icon nzType="file-excel"></span> Xuất excel
+      </button>
+    </div>
+
+    <div class="filter-container">
+      <div nz-row [nzGutter]="24">
+
+        <!-- Cửa hàng/Khách hàng -->
+        <div nz-col [nzSpan]="6">
+          <div class="form-item">
+            <label class="ant-form-item-required">Cửa hàng/Khách hàng</label>
+            <nz-select 
+              [(ngModel)]="filterData.storeOrCustomer" 
+              nzShowSearch 
+              nzAllowClear 
+              nzPlaceHolder="Chọn đối tượng"
+            >
+              <nz-option *ngFor="let item of listStoreCustomer" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+
+        <!-- Mặt hàng -->
+        <div nz-col [nzSpan]="6">
+          <div class="form-item">
+            <label>Mặt hàng</label>
+            <nz-select 
+              [(ngModel)]="filterData.itemType" 
+              nzAllowClear 
+              nzShowSearch
+              nzPlaceHolder="Chọn mặt hàng"
+            >
+              <nz-option 
+                *ngFor="let item of listItemTypes" 
+                [nzValue]="item.value" 
+                [nzLabel]="item.label"
+              ></nz-option>
+            </nz-select>
+          </div>
+        </div>
+
+        <!-- Trạng thái -->
+        <div nz-col [nzSpan]="6">
+          <div class="form-item">
+            <label>Trạng thái</label>
+            <nz-select [(ngModel)]="filterData.status" nzAllowClear nzPlaceHolder="-">
+              <nz-option nzValue="1" nzLabel="Khởi tạo"></nz-option>
+              <nz-option nzValue="2" nzLabel="Chờ phê duyệt"></nz-option>
+              <nz-option nzValue="3" nzLabel="Đã phê duyệt"></nz-option>
+              <nz-option nzValue="4" nzLabel="Từ chối"></nz-option>
+              <nz-option nzValue="5" nzLabel="Đã xác nhận thực nhận"></nz-option>
+              <nz-option nzValue="-1" nzLabel="Hủy đơn hàng"></nz-option>
+              <nz-option nzValue="-3" nzLabel="Đã phê duyệt lượng"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        
+        <!-- Ngày đặt hàng -->
+        <div nz-col [nzSpan]="6">
+          <div class="form-item">
+            <label>Ngày đặt hàng</label>
+            <nz-range-picker 
+              [(ngModel)]="filterData.dateRange" 
+              [nzFormat]="'dd/MM/yyyy'"
+              style="width: 100%;"
+            ></nz-range-picker>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BẢNG XEM TRƯỚC -->
+    <div class="preview-section" *ngIf="showPreviewTable" style="margin-top: 24px;">
+      <h3>Kết quả xem trước</h3>
+      
+      <nz-table 
+        #realtimeTable 
+        [nzData]="realtimePreviewData" 
+        [nzLoading]="isLoadingPreview"
+        nzBordered
+        nzSize="small"
+        [nzScroll]="{ x: '2000px' }"
+        [nzFrontPagination]="false"
+        [nzShowPagination]="false"
+      >
+        <thead>
+          <tr>
+            <th nzWidth="60px">STT</th>
+            <th nzWidth="150px">Số đơn hàng SMO</th>
+            <th nzWidth="150px">Loại đơn hàng</th>
+            <th nzWidth="150px" *ngIf="appliedStoreOrCustomer === 'Customer'">Khách hàng</th>
+            <th nzWidth="150px" *ngIf="appliedStoreOrCustomer === 'Store'">Cửa hàng</th>
+            <th nzWidth="200px">Mặt hàng</th>
+            <th nzWidth="100px" nzAlign="right">Lượng đặt</th>
+            <th nzWidth="120px" nzAlign="right">Lượng phê duyệt</th>
+            <th nzWidth="100px">Số xe</th>
+            <th nzWidth="120px">Tên tài xế</th>
+            <th nzWidth="130px">Ngày đặt hàng</th>
+            <th nzWidth="140px">Ngày dự kiến giao</th>
+            <th nzWidth="100px">Trạng thái</th>
+            <th nzWidth="150px">Cập nhật lần cuối</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let order of realtimePreviewData">
+            <ng-container *ngIf="order.danhSachMatHang && order.danhSachMatHang.length > 0; else noProducts">
+              <tr *ngFor="let product of order.danhSachMatHang; let i = index">
+                <!-- Thông tin đơn hàng - chỉ hiện ở dòng đầu -->
+                <td *ngIf="i === 0" [attr.rowspan]="order.danhSachMatHang.length">{{ order.stt }}</td>
+                <td *ngIf="i === 0" [attr.rowspan]="order.danhSachMatHang.length">{{ order.soDonHangSMO }}</td>
+                <td *ngIf="i === 0" [attr.rowspan]="order.danhSachMatHang.length">{{ order.loaiDonHang }}</td>
+                <td *ngIf="i === 0 && appliedStoreOrCustomer === 'Customer'" [attr.rowspan]="order.danhSachMatHang.length">
+                  {{ order.khachHang }}
+                </td>
+                <td *ngIf="i === 0 && appliedStoreOrCustomer === 'Store'" [attr.rowspan]="order.danhSachMatHang.length">
+                  {{ order.cuaHang }}
+                </td>
+
+                <!-- Thông tin sản phẩm - hiện ở mỗi dòng -->
+                <td>{{ product.matHang }}</td>
+                <td nzAlign="right">{{ product.luongDat | number:'1.0-2' }}</td>
+                <td nzAlign="right">{{ product.luongPheDuyet | number:'1.0-2' }}</td>
+
+                <!-- Thông tin vận chuyển - chỉ hiện ở dòng đầu -->
+                <td *ngIf="i === 0" [attr.rowspan]="order.danhSachMatHang.length">{{ order.soXe }}</td>
+                <td *ngIf="i === 0" [attr.rowspan]="order.danhSachMatHang.length">{{ order.tenTaiXe }}</td>
+                <td *ngIf="i === 0" [attr.rowspan]="order.danhSachMatHang.length">
+                  {{ order.ngayDatHang | date: 'dd/MM/yyyy HH:mm' }}
+                </td>
+                <td *ngIf="i === 0" [attr.rowspan]="order.danhSachMatHang.length">
+                  {{ order.ngayDuKienGiao | date: 'dd/MM/yyyy HH:mm' }}
+                </td>
+                <td *ngIf="i === 0" [attr.rowspan]="order.danhSachMatHang.length">{{ order.trangThai }}</td>
+                <td *ngIf="i === 0" [attr.rowspan]="order.danhSachMatHang.length">
+                  {{ order.capNhatLanCuoi | date: 'dd/MM/yyyy HH:mm:ss' }}
+                </td>
+              </tr>
+            </ng-container>
+
+            <!-- Template cho đơn không có sản phẩm -->
+            <ng-template #noProducts>
+              <tr>
+                <td>{{ order.stt }}</td>
+                <td>{{ order.soDonHangSMO }}</td>
+                <td>{{ order.loaiDonHang }}</td>
+                <td *ngIf="appliedStoreOrCustomer === 'Customer'">{{ order.khachHang }}</td>
+                <td *ngIf="appliedStoreOrCustomer === 'Store'">{{ order.cuaHang }}</td>
+                <td colspan="4" nzAlign="center">-</td>
+                <td>{{ order.soXe }}</td>
+                <td>{{ order.tenTaiXe }}</td>
+                <td>{{ order.ngayDatHang | date: 'dd/MM/yyyy HH:mm' }}</td>
+                <td>{{ order.ngayDuKienGiao | date: 'dd/MM/yyyy HH:mm' }}</td>
+                <td>{{ order.trangThai }}</td>
+                <td>{{ order.capNhatLanCuoi | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+              </tr>
+            </ng-template>
+          </ng-container>
+        </tbody>
+      </nz-table>
+    </div>
+
+  </nz-page-header-content>
+</nz-page-header>

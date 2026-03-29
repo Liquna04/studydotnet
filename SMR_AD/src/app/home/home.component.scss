@@ -1,0 +1,956 @@
+.dashboard-container {
+  padding: 12px;
+  background-color: #ffffff; // set white background on all breakpoints
+  min-height: calc(100vh - 64px);
+
+  .dashboard-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 24px;
+
+    .dashboard-title {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+  }
+
+  // Statistics Cards
+  .stats-cards {
+    margin-bottom: 24px;
+
+    .ant-row {
+      display: flex;
+      align-items: stretch;
+    }
+
+    .ant-col {
+      display: flex;
+    }
+
+    .stat-card {
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      background-color: #ffffff;
+      transition: all 0.3s ease;
+      height: 100%;
+      width: 100%;
+
+      &:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+      }
+
+      .ant-card-body {
+        padding: 20px;
+      }
+
+      &.stat-card-filled {
+        color: #fff !important; // ensure text inside card is white by default
+        border: none;
+        box-shadow: none;
+
+        .ant-card-body {
+          padding: 20px;
+        }
+
+        // Force most text elements to white for maximum contrast
+        .stat-title,
+        .stat-value,
+        .stat-change,
+        .ant-card-head-title,
+        .ant-card-meta,
+        .ant-card-extra,
+        .ant-card-body,
+        .ant-card-body * {
+          color: #fff !important;
+        }
+
+        .stat-title {
+          font-weight: 600;
+          text-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-value {
+          color: #fff;
+          font-size: 36px;
+          font-weight: 800;
+          text-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-change {
+          color: rgba(255, 255, 255, 0.92);
+          font-weight: 600;
+        }
+
+        .stat-icon {
+          background-color: rgba(255, 255, 255, 0.12) !important;
+          color: #fff !important;
+          /* Ensure svg/icon paths inherit white color */
+          svg,
+          i,
+          span {
+            color: #fff !important;
+          }
+        }
+
+        &:hover {
+          filter: brightness(0.98);
+          transform: translateY(0);
+        }
+      }
+
+      .stat-content {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        .stat-icon {
+          width: 56px;
+          height: 56px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 24px;
+          /* Ensure icon background uses a translucent variant when provided via inline style */
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+
+        .stat-info {
+          flex: 1;
+
+          .stat-title {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 4px;
+          }
+
+          .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 4px;
+          }
+
+          .stat-change {
+            font-size: 12px;
+            color: #10b981;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+
+  // Force all ant-card elements inside the dashboard to be square
+  .ant-card,
+  nz-card,
+  .stats-cards .ant-card,
+  .main-content .ant-card,
+  .dashboard-container .ant-card {
+    border-radius: 0 !important;
+  }
+
+  /* Ensure card head/body corners are not rounded */
+  .ant-card-head,
+  .ant-card-body {
+    border-radius: 0 !important;
+  }
+
+  // Main Content
+  .main-content {
+    display: grid;
+    /* Desktop: keep each main card on its own row for responsive primary layout.
+       Cards will be full width (100%) until a very wide viewport where small multi-column
+       layouts may be acceptable. This prevents the 4 cards from sitting in one row
+       and overflowing smaller screens. */
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-top: 32px; 
+
+    /* If you prefer two columns at very wide sizes, uncomment the block below */
+    @media (min-width: 1600px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .orders-card,
+    .chart-card,
+    .delivery-card,
+    .additional-stats {
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      border: 1px solid #f0f0f0;
+      background-color: #ffffff;
+      width: 100%; // ensure full width on all breakpoints
+      box-sizing: border-box;
+      min-width: 0; /* allow children to shrink to prevent overflow */
+
+      .filter-buttons {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 8px;
+        padding: 4px 14px 8px 14px;
+        border-bottom: 1px solid #f5f5f5;
+        background: #fff;
+        margin: 0;
+
+        button {
+          width: 100%;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 16px;
+          border: 1px solid #d9d9d9;
+          font-size: 12px;
+          height: 34px;
+          padding: 0 8px;
+          white-space: nowrap;
+
+          &.ant-btn-primary {
+            /* Primary buttons harmonize with Tổng đơn hàng (blue) */
+            background: #e91e63;
+            border-color: #e91e63;
+            color: #fff;
+          }
+          &.ant-btn-default {
+            background: #fff;
+            color: #333;
+          }
+          &.ant-btn-default:hover {
+            border-color: #f37021;
+            color: #f37021;
+          }
+        }
+      }
+
+      .ant-card-head {
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        align-items: stretch;
+        padding: 12px 20px;
+        .ant-card-head-wrapper {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .ant-card-head-title {
+          font-size: 18px;
+          font-weight: 600;
+          color: #1f2937;
+          margin: 0;
+          white-space: normal;
+        }
+        .ant-card-extra {
+          margin-left: auto;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          padding: 0;
+          min-width: 0;
+        }
+        .ant-card-extra button {
+          border-radius: 16px;
+          border: 1px solid #d9d9d9;
+          font-size: 12px;
+          height: 28px;
+          padding: 0 10px;
+          min-width: 68px;
+          line-height: 26px;
+          white-space: nowrap;
+        }
+        .ant-card-extra button.ant-btn-primary {
+          background: #207ce5;
+          border-color: #207ce5;
+          color: #fff;
+        }
+        .ant-card-extra button.ant-btn-default {
+          background: #fff;
+          color: #666;
+        }
+        .ant-card-extra button.ant-btn-default:hover {
+          border-color: #f37021;
+          color: #f37021;
+        }
+      }
+    }
+
+    /* When filters moved to card extra, hide original filter-buttons block to avoid duplication */
+    .orders-card .filter-buttons,
+    .delivery-card .filter-buttons {
+      display: none !important;
+    }
+
+    /* Style the dropdown button used in card extra to look like previous pill buttons */
+    .ant-card .ant-btn[nz-button][nz-dropdown] {
+      border-radius: 16px;
+      border: 1px solid #d9d9d9;
+      padding: 0 12px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    // Orders Table
+    .orders-card {
+      .ant-card-body {
+        padding-top: 0; // remove top padding since filter-buttons handle spacing
+      }
+
+      .orders-table-wrapper {
+        width: 100%;
+        overflow-x: auto; // prevent overflow outside card
+        scrollbar-width: thin;
+        -webkit-overflow-scrolling: touch;
+        margin-top: 12px; // add spacing after filter buttons
+      }
+      .ant-table {
+        .ant-table-thead > tr > th {
+          background: #fafafa;
+          border-bottom: 1px solid #f0f0f0;
+          font-weight: 600;
+          color: #374151;
+        }
+
+        .ant-table-tbody > tr > td {
+          border-bottom: 1px solid #f0f0f0;
+        }
+
+        .ant-table-tbody > tr:hover > td {
+          background: #f8f9fa;
+        }
+      }
+    }
+
+    // Chart Card
+    .chart-card {
+      .chart-container {
+        .chart-legend {
+          display: flex;
+          gap: 24px;
+          margin-bottom: 20px;
+
+          .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #6b7280;
+
+            .legend-dot {
+              width: 8px;
+              height: 8px;
+              border-radius: 50%;
+            }
+          }
+        }
+
+        .simple-chart {
+          position: relative;
+
+          .chart-svg {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 16px;
+          }
+
+          .chart-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #9ca3af;
+            padding: 0 10px; // align with chart left/right padding
+          }
+        }
+      }
+    }
+
+    // Delivery Card
+    .delivery-card {
+      .ant-card-body {
+        padding-top: 0; // remove top padding since filter-buttons handle spacing
+      }
+
+      .delivery-list {
+        margin-top: 12px; // add spacing after filter buttons
+
+        .delivery-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 16px 0;
+          border-bottom: 1px solid #f0f0f0;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          .delivery-info {
+            .delivery-order {
+              font-weight: 600;
+              color: #1f2937;
+              margin-bottom: 4px;
+            }
+
+            .delivery-destination {
+              font-size: 14px;
+              color: #6b7280;
+            }
+          }
+
+          .delivery-status {
+            text-align: right;
+
+            .delivery-date {
+              font-size: 12px;
+              color: #9ca3af;
+              margin-top: 4px;
+            }
+          }
+        }
+      }
+    }
+
+    // Additional Stats
+    .additional-stats {
+      .additional-stat-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 0;
+
+        .additional-stat-label {
+          font-size: 14px;
+          color: #6b7280;
+        }
+
+        .additional-stat-value {
+          font-size: 20px;
+          font-weight: 600;
+          color: #1f2937;
+        }
+
+        .additional-stat-change {
+          font-size: 12px;
+          font-weight: 500;
+
+          &.positive {
+            color: #10b981;
+          }
+
+          &.negative {
+            color: #ef4444;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (min-width: 769px) and (max-width: 1024px) {
+  .dashboard-container {
+    /* Keep a consistent small top padding */
+    padding: 12px 0 0 0; // retain a bit of top space; horizontal padding handled per-section
+    background-color: #ffffff; // keep white in mobile too
+
+    .dashboard-header {
+      margin: 0 0 16px 0;
+      padding: 0 16px; // header horizontal padding
+    }
+    .dashboard-header .dashboard-title {
+      font-size: 24px;
+    }
+
+    .stats-cards {
+      margin-bottom: 16px;
+      padding: 0 16px; // stat cards get padding but not container
+
+      /* Force a two-column grid on small screens so items align into rows with equal heights */
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 16px;
+      align-items: stretch;
+    }
+    .stats-cards .ant-row,
+    .stats-cards .ant-col {
+      display: contents; /* let the grid control layout */
+    }
+    .stats-cards .ant-col:last-child {
+      margin-bottom: 0;
+    }
+    .stats-cards .stat-card .stat-content .stat-icon {
+      width: 48px;
+      height: 48px;
+      font-size: 20px;
+    }
+    .stats-cards .stat-card .stat-content .stat-info .stat-value {
+      font-size: 24px;
+    }
+    /* Equalize heights of statistic cards on small screens */
+    .stats-cards .stat-card .ant-card-body {
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      padding: 16px; /* uniform padding */
+      width: 100%;
+      box-sizing: border-box;
+      flex: 1 1 auto; /* allow body to expand */
+    }
+
+    /* Force the stat card itself to stretch so all cards match height inside their column */
+    .stats-cards > div > .ant-card,
+    .stats-cards > div > nz-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .stats-cards .stat-card .stat-content {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* ensure icon box is fixed so content doesn't shift */
+    .stats-cards .stat-card .stat-icon {
+      width: 56px;
+      height: 56px;
+      min-width: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Prevent long values or changes from changing card height */
+    .stats-cards .stat-card .stat-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0; /* allow flex children to shrink */
+    }
+
+    .stats-cards .stat-card .stat-info .stat-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 14px;
+    }
+
+    .stats-cards .stat-card .stat-info .stat-value {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1;
+      font-size: 32px;
+    }
+
+    .stats-cards .stat-card .stat-info .stat-change {
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    .main-content {
+      gap: 16px; // reduce gap on smaller screens
+      margin-top: 24px; // smaller margin between stats and main cards
+    }
+    .main-content .orders-card,
+    .main-content .chart-card,
+    .main-content .delivery-card,
+    .main-content .additional-stats {
+      border-radius: 0; // square corners for full width effect
+      /* Make tablet match mobile: full border around each card */
+      border: 1px solid #f0f0f0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      background-color: #ffffff;
+      width: 100%; // full-width cards on tablet
+    }
+
+    /* Normalize body paddings so card heights are more even */
+    .main-content .orders-card .ant-card-body,
+    .main-content .chart-card .ant-card-body,
+    .main-content .delivery-card .ant-card-body,
+    .main-content .additional-stats .ant-card-body {
+      padding: 16px;
+    }
+
+    .main-content .filter-buttons {
+      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      gap: 6px;
+      padding: 4px 16px 6px 16px;
+
+      button {
+        height: 30px;
+        font-size: 11px;
+        padding: 0 6px;
+      }
+    }
+
+    .main-content .ant-card-head .ant-card-head-title {
+      font-size: 16px;
+    }
+    .main-content .ant-card-head {
+      padding: 12px 16px;
+    }
+    .main-content .ant-card-head-title {
+      font-size: 16px;
+    }
+    .main-content .ant-card-extra button {
+      font-size: 11px;
+      height: 26px;
+      padding: 0 8px;
+      min-width: 64px;
+    }
+  }
+}
+
+// Extra small screens
+@media (max-width: 768px) {
+  .dashboard-container {
+    /* Maintain same top padding to avoid title jump */
+    padding: 12px 0 0 0; // edge to edge horizontally
+    background-color: #ffffff; /* set white background on small screens per request */
+
+    .dashboard-header {
+      padding: 0 12px;
+    }
+
+    .stats-cards {
+      padding: 0 12px;
+      margin-bottom: 24px; // ensure spacing between stats and main content
+
+      /* Make every stat card occupy its own full-width row at <=768px */
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-gap: 12px;
+
+      .ant-row,
+      .ant-col {
+        display: contents; /* allow grid to control layout */
+      }
+
+      .stat-card {
+        .ant-card-body {
+          padding: 16px;
+        }
+      }
+    }
+
+    /* Prevent the entire page from horizontally scrolling on mobile. Any overflowing content
+       should scroll inside its own container (like tables). */
+    // Ensure root doesn't create horizontal scroll by forcing box-sizing and overflow rules
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    // The dashboard wrapper should not overflow horizontally
+    .dashboard-container {
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .main-content {
+      gap: 16px; // reduce gap between main cards
+      margin-top: 16px; // smaller margin between stats and main cards on mobile
+
+      /* Make sure each main card occupies full width and its internal layout wraps instead
+         of forcing a wider page. */
+      .orders-card,
+      .chart-card,
+      .delivery-card,
+      .additional-stats {
+        width: 100%;
+        min-width: 0; /* allow flex/grid children to shrink */
+        overflow: visible; /* internal scroll areas will be handled explicitly */
+
+        .ant-card-body {
+          padding: 12px; /* slightly reduced padding on mobile */
+        }
+      }
+
+      /* Orders table: enable internal horizontal scrolling only for the table area so the
+         page itself doesn't scroll */
+      .orders-card {
+        .orders-table-wrapper {
+          width: 100%;
+          overflow-x: auto; /* horizontal scroll inside the table wrapper */
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: thin;
+          margin-top: 12px;
+
+          /* Prevent the table from expanding the page: allow table to be as wide as needed
+             but scrolled inside this container */
+          table {
+            min-width: 700px; /* you may adjust this to match expected table columns */
+            width: auto;
+          }
+        }
+      }
+
+      /* Chart / Delivery / Additional stats cards: ensure contents wrap and use flex/grid
+         to avoid forcing a wide layout. */
+      .chart-card {
+        .chart-container {
+          .simple-chart {
+            .chart-svg {
+              height: 180px; /* reduce on mobile */
+            }
+          }
+        }
+      }
+
+      .delivery-card {
+        .delivery-list {
+          .delivery-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+
+            .delivery-status {
+              width: 100%;
+              text-align: left;
+            }
+          }
+        }
+      }
+
+      .additional-stats {
+        .additional-stat-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 6px;
+        }
+      }
+    }
+
+    .main-content .filter-buttons {
+      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+      padding: 4px 12px 6px 12px;
+      gap: 6px;
+    }
+    .main-content .filter-buttons button {
+      font-size: 10px;
+      height: 28px;
+      padding: 0 4px;
+    }
+
+    .main-content .ant-card-head {
+      padding: 12px 12px;
+    }
+    .main-content .ant-card-head-title {
+      font-size: 15px;
+    }
+    .main-content .ant-card-extra button {
+      font-size: 10px;
+      height: 24px;
+      padding: 0 6px;
+      min-width: 56px;
+    }
+  }
+}
+
+// Very narrow cards (delivery card etc)
+@media (max-width: 320px) {
+  .main-content .filter-buttons {
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  }
+}
+
+// Animation enhancements
+.stat-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.orders-card {
+  animation: fadeInUp 0.6s ease-out 0.1s both;
+}
+
+.chart-card {
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.delivery-card {
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.additional-stats {
+  animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Orders Filter Styles
+.orders-filter-container {
+  background-color: #ffffff;
+  border-radius: 4px;
+  min-width: 520px;
+  padding: 12px;
+  border: 1px solid #f0f0f0;
+
+  .filter-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .time-range-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+
+    span {
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    button {
+      white-space: nowrap;
+    }
+  }
+
+  .custom-date-range {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0;
+
+    > div {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    input[type="date"] {
+      padding: 4px 8px;
+      border: 1px solid #d9d9d9;
+      border-radius: 2px;
+      font-size: 14px;
+
+      &:focus {
+        border-color: #1890ff;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+      }
+    }
+
+    label {
+      font-size: 14px;
+      white-space: nowrap;
+    }
+  }
+
+  .status-filter {
+    padding: 8px 0;
+
+    label {
+      font-size: 14px;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+      display: block;
+      font-weight: 500;
+    }
+
+    .status-checkboxes {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      .status-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        cursor: pointer;
+        margin: 0;
+
+        input[type="checkbox"] {
+          cursor: pointer;
+          width: 16px;
+          height: 16px;
+          accent-color: #1890ff;
+          flex-shrink: 0;
+        }
+
+        nz-tag {
+          cursor: pointer;
+          user-select: none;
+        }
+
+        &:hover nz-tag {
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+
+  .filter-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    padding-top: 8px;
+    border-top: 1px solid #e8e8e8;
+
+    button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+    }
+  }
+}
+
+// Responsive adjustments for filter
+@media (max-width: 768px) {
+  .orders-filter-container {
+    min-width: auto !important;
+
+    .custom-date-range > div {
+      flex-direction: column;
+
+      label {
+        margin-bottom: 4px;
+      }
+
+      input {
+        width: 100% !important;
+        max-width: none !important;
+      }
+    }
+
+    .status-filter {
+      nz-select {
+        width: 100%;
+      }
+    }
+
+    .time-range-filters {
+      justify-content: space-between;
+
+      button {
+        flex: 1;
+        min-width: auto;
+      }
+    }
+  }
+}

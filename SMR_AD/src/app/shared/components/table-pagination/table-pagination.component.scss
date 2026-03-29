@@ -1,0 +1,143 @@
+.table-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
+  font-size: 14px;
+  position: sticky; /* keep visible inside scroll container */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.04);
+
+  .pagination-info {
+    color: #666;
+
+    span {
+      font-weight: 400;
+    }
+  }
+
+  .pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .page-buttons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .nav-btn {
+        min-width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #d9d9d9;
+        border-radius: 6px;
+        background: #fff;
+        color: #595959;
+
+        &:hover:not(:disabled) {
+          border-color: #40a9ff;
+          color: #40a9ff;
+        }
+
+        &:disabled {
+          color: #d9d9d9;
+          background: #f5f5f5;
+          border-color: #d9d9d9;
+          cursor: not-allowed;
+        }
+      }
+
+      .page-info {
+        min-width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #1890ff;
+        color: #fff;
+        border-radius: 6px;
+        font-weight: 500;
+      }
+    }
+
+    .page-size-selector {
+      .size-select {
+        min-width: 120px;
+
+        :host ::ng-deep .ant-select-selector {
+          border-radius: 6px;
+          border: 1px solid #d9d9d9;
+          height: 32px;
+
+          .ant-select-selection-item {
+            line-height: 30px;
+            color: #595959;
+          }
+        }
+
+        :host ::ng-deep .ant-select-arrow {
+          color: #8c8c8c;
+        }
+
+        :host ::ng-deep .ant-select:hover .ant-select-selector {
+          border-color: #40a9ff;
+        }
+
+        :host ::ng-deep .ant-select-focused .ant-select-selector {
+          border-color: #40a9ff;
+          box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+      }
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 16px;
+
+    .pagination-controls {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .pagination-controls {
+      flex-direction: column;
+      gap: 12px;
+
+      .page-size-selector .size-select {
+        min-width: 100px;
+      }
+    }
+  }
+}
+
+// Global styles for this component
+:host ::ng-deep {
+  .ant-select-dropdown {
+    border-radius: 6px;
+
+    .ant-select-item-option {
+      &:hover {
+        background-color: #f5f5f5;
+      }
+
+      &.ant-select-item-option-selected {
+        background-color: #e6f7ff;
+        color: #1890ff;
+        font-weight: 500;
+      }
+    }
+  }
+}

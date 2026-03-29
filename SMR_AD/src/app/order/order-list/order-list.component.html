@@ -1,0 +1,310 @@
+<nz-page-header nzBackIcon>
+  <nz-page-header-title>DANH SÁCH ĐẶT HÀNG</nz-page-header-title>
+  <nz-page-header-extra>
+    <div class="header-actions">
+       <div class="view-mode-select"  *ngIf="currentAccountType !== 'KH'">
+  <nz-select 
+    [(ngModel)]="viewMode" 
+    (ngModelChange)="onViewModeChange($event)" 
+  >
+    <nz-option nzValue="CUSTOMER" nzLabel="Đơn khách hàng"></nz-option>
+    <nz-option nzValue="STORE" nzLabel="Đơn cửa hàng"></nz-option>
+  </nz-select>
+</div>
+      <div class="search-group">
+        <input
+          class="search-input"
+          type="text"
+          nz-input
+          placeholder="Tìm kiếm đơn hàng..."
+          [(ngModel)]="searchText"
+          (keyup.enter)="onSearch()"
+        />
+        <div class="search-buttons">
+          <button
+            (click)="onSearch()"
+            class="flex !items-center gray-btn icon-only"
+            nzType="default"
+            nz-button
+          >
+            <span nz-icon nzType="search"></span>
+          </button>
+          <button
+            (click)="onReset()"
+            class="flex !items-center gray-btn icon-only"
+            nzType="default"
+            nz-button
+          >
+            <span nz-icon nzType="redo"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nz-page-header-extra>
+
+  <nz-page-header-content>
+    <div>
+      <nz-space class="actions-bar">
+    
+        <button nz-button nzType="default" (click)="onCreateNew()">
+          <nz-icon nzType="plus"></nz-icon>
+          Tạo đơn hàng
+        </button>
+        <button nz-button nzType="default" (click)="onReturnOrder()" *ngIf="currentAccountType === 'KH' ||currentAccountType === 'CH'">
+          <nz-icon nzType="rollback"></nz-icon>
+          Trả hàng
+        </button>
+        <button nz-button nzType="default" (click)="onSendOrder()">
+          <nz-icon nzType="send"></nz-icon>
+          Gửi đơn hàng
+        </button>
+        <button nz-button nzType="default" (click)="onCancelOrder()">
+          <nz-icon nzType="delete"></nz-icon>
+          Hủy đơn hàng
+        </button>
+         <button nz-button nzType="default" (click)="onConfirmReceived()">
+          <nz-icon nzType="file-done"></nz-icon>
+          Xác nhận thực nhận
+        </button>
+      </nz-space>
+
+      <!-- Bảng danh sách đơn hàng giống ảnh mẫu -->
+      <div class="style-data-table">
+        <nz-table
+          #basicTable
+          [nzData]="paginatedOrderList || listOfData"
+          nzBordered
+          [nzFrontPagination]="false"
+          [nzShowPagination]="false"
+        >
+          <thead>
+            <tr>
+              <th style="width: 60px">STT</th>
+              <th style="width: 40px">
+                <input
+                  type="checkbox"
+                  (change)="onAllChecked($event)"
+                  [checked]="allChecked"
+                />
+              </th>
+              <th>MÃ ĐƠN HÀNG</th>
+              <th *ngIf="viewMode === 'STORE'">CỬA HÀNG</th>
+              <th *ngIf="viewMode === 'CUSTOMER'">KHÁCH HÀNG</th>
+              <!--
+              Filter logic commented out
+              nz-popover
+              [nzPopoverContent]="customerFilterTemplate"
+              nzPopoverTitle="Lọc theo khách hàng"
+              nzPopoverPlacement="bottomLeft"
+              nzPopoverTrigger="click"
+              class="cursor-pointer status-filter-header-th"
+              -->
+              <th>PHƯƠNG TIỆN</th>
+              <!--
+              Filter logic commented out
+              nz-popover
+              [nzPopoverContent]="vehicleFilterTemplate"
+              nzPopoverTitle="Lọc theo phương tiện"
+              nzPopoverPlacement="bottomLeft"
+              nzPopoverTrigger="click"
+              class="cursor-pointer status-filter-header-th"
+              -->
+              <th>TRẠNG THÁI</th>
+              <!--
+              Filter logic commented out
+              nz-popover
+              [nzPopoverContent]="statusFilterTemplate"
+              nzPopoverTitle="Lọc theo trạng thái"
+              nzPopoverPlacement="bottomLeft"
+              nzPopoverTrigger="click"
+              class="cursor-pointer status-filter-header-th"
+              -->
+              <th>GHI CHÚ</th>
+              <th>NGÀY TẠO ĐƠN</th>
+              <th>NGÀY NHẬN HÀNG</th>
+              <th>NGÀY HẾT HẠN</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of itemsToShow; let i = index">
+              <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+              <td>
+                <input
+                  type="checkbox"
+                  (change)="onOrderChecked(item, $event)"
+                  [checked]="isOrderSelected(item)"
+                />
+              </td>
+              <td>
+                <a
+                  [routerLink]="
+                    item.status === 'Khởi tạo' || item.status === 'Chờ phê duyệt'
+                      ? ['/order/edit', item.id]
+                      : ['/order/view', item.id]
+                  "
+                  (click)="$event.stopPropagation()"
+                >
+                  {{ item.orderCode }}
+                </a>
+              </td>
+              <td *ngIf="viewMode === 'STORE'">
+                {{ storeMap.get(item.storeCode) || item.storeCode || '-' }}
+              </td>
+
+              <td *ngIf="viewMode === 'CUSTOMER'">
+                {{ item.customer }}
+              </td>
+              <td>{{ item.vehicle || "-" }}</td>
+              <td>
+                <nz-tag [nzColor]="getStatusColor(item.status)">{{
+                  item.status
+                }}</nz-tag>
+              </td>
+              <td>{{ item.orderNote || "-" }}</td>
+              <td>{{ item.orderDate }}</td>
+              <td>{{ item.receiveDate }}</td>
+              <td>{{ item.expireDate }}</td>
+            </tr>
+          </tbody>
+        </nz-table>
+        <!-- Pagination (synchronized with Customer screen) -->
+        <nz-pagination
+          class="pagination-spacing"
+          [nzPageIndex]="currentPage"
+          [nzTotal]="total"
+          [nzPageSize]="pageSize"
+          [nzPageSizeOptions]="[10, 20, 30, 50, 100]"
+          [nzShowSizeChanger]="true"
+          (nzPageIndexChange)="onPageChange(+$event)"
+          (nzPageSizeChange)="onPageSizeChange(+$event)"
+        >
+        </nz-pagination>
+      </div>
+    </div>
+  </nz-page-header-content>
+</nz-page-header>
+
+<!--
+Status Filter Popover Template
+<ng-template #statusFilterTemplate>
+  <div class="status-filter-content">
+    <div class="filter-options">
+      <div
+        *ngIf="availableStatuses.length === 0"
+        style="padding: 10px; color: #999"
+      >
+        Không có trạng thái nào
+      </div>
+      <div *ngFor="let status of availableStatuses" style="padding: 8px 0">
+        <label style="display: flex; align-items: center; cursor: pointer">
+          <input
+            type="checkbox"
+            #statusCheckbox
+            [checked]="selectedStatusFilters.includes(status)"
+            (change)="onStatusFilterChange(status, statusCheckbox.checked)"
+            style="margin-right: 8px"
+          />
+          <nz-tag [nzColor]="getStatusColor(status)">{{ status }}</nz-tag>
+        </label>
+      </div>
+    </div>
+    <div
+      class="filter-actions"
+      style="margin-top: 12px; border-top: 1px solid #f0f0f0; padding-top: 8px"
+    >
+      <button
+        nz-button
+        nzType="default"
+        nzSize="small"
+        (click)="clearStatusFilters()"
+      >
+        Đặt lại
+      </button>
+    </div>
+  </div>
+</ng-template>
+-->
+
+<!--
+Customer Filter Popover Template
+<ng-template #customerFilterTemplate>
+  <div class="status-filter-content">
+    <div class="filter-options">
+      <div
+        *ngIf="availableCustomers.length === 0"
+        style="padding: 10px; color: #999"
+      >
+        Không có khách hàng nào
+      </div>
+      <div *ngFor="let customer of availableCustomers" style="padding: 8px 0">
+        <label style="display: flex; align-items: center; cursor: pointer">
+          <input
+            type="checkbox"
+            #customerCheckbox
+            [checked]="selectedCustomerFilters.includes(customer)"
+            (change)="
+              onCustomerFilterChange(customer, customerCheckbox.checked)
+            "
+            style="margin-right: 8px"
+          />
+          <span>{{ customer }}</span>
+        </label>
+      </div>
+    </div>
+    <div
+      class="filter-actions"
+      style="margin-top: 12px; border-top: 1px solid #f0f0f0; padding-top: 8px"
+    >
+      <button
+        nz-button
+        nzType="default"
+        nzSize="small"
+        (click)="clearCustomerFilters()"
+      >
+        Đặt lại
+      </button>
+    </div>
+  </div>
+</ng-template>
+-->
+
+<!--
+Vehicle Filter Popover Template
+<ng-template #vehicleFilterTemplate>
+  <div class="status-filter-content">
+    <div class="filter-options">
+      <div
+        *ngIf="availableVehicles.length === 0"
+        style="padding: 10px; color: #999"
+      >
+        Không có phương tiện nào
+      </div>
+      <div *ngFor="let vehicle of availableVehicles" style="padding: 8px 0">
+        <label style="display: flex; align-items: center; cursor: pointer">
+          <input
+            type="checkbox"
+            #vehicleCheckbox
+            [checked]="selectedVehicleFilters.includes(vehicle)"
+            (change)="onVehicleFilterChange(vehicle, vehicleCheckbox.checked)"
+            style="margin-right: 8px"
+          />
+          <span>{{ vehicle }}</span>
+        </label>
+      </div>
+    </div>
+    <div
+      class="filter-actions"
+      style="margin-top: 12px; border-top: 1px solid #f0f0f0; padding-top: 8px"
+    >
+      <button
+        nz-button
+        nzType="default"
+        nzSize="small"
+        (click)="clearVehicleFilters()"
+      >
+        Đặt lại
+      </button>
+    </div>
+  </div>
+</ng-template>
+-->

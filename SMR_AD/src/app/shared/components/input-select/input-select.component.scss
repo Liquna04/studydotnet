@@ -1,0 +1,28 @@
+nz-form-item {
+  margin-bottom: 16px;
+}
+
+nz-form-label {
+  font-weight: 500;
+}
+
+nz-select {
+  width: 100%;
+}
+
+.ant-select-selector {
+  height: 31px !important;  /* Đặt chiều cao khớp với input (31px) */
+  min-height: 31px !important;
+  line-height: 23px !important;  /* Điều chỉnh để text align trung tâm (31px - 4px top - 4px bottom) */
+  padding: 4px 11px !important;  /* Khớp padding với input */
+  border-width: 1px !important;  /* Đảm bảo border không làm lệch */
+  border-radius: 2px !important;  /* Khớp radius nếu cần */
+}
+
+.ant-select-selection-placeholder {
+  line-height: 23px !important;  /* Align placeholder với text */
+}
+
+.ant-select-selection-item {
+  line-height: 23px !important;  /* Align selected item */
+}

@@ -1,0 +1,61 @@
+.in-checked {
+  color: #0b9d58;
+}
+.out-checked {
+  color: red;
+}
+
+/* Drawer header actions layout */
+.drawer-header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.drawer-header-actions .primary-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* secondary actions container not shown on wider screens once we add the mobile row */
+.drawer-header-actions .secondary-actions {
+  margin-left: auto;
+}
+
+/* Mobile/Tablet <= 768px */
+@media (max-width: 768px) {
+  .drawer-header-actions {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+  }
+  /* Hide reset action in header on small screens */
+  .drawer-header-actions .secondary-actions {
+    display: none;
+  }
+}
+
+/* Remove Tabs overflow "more" button and enable horizontal scroll for tab headers (scoped) */
+:host ::ng-deep {
+  .ant-tabs-nav-more {
+    display: none !important;
+  }
+}
+
+/* A dedicated row for reset password under the header only on small screens */
+.mobile-reset-row {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-reset-row {
+    display: block;
+    padding: 8px 0 0;
+  }
+  .mobile-reset-row .reset-password {
+    width: 100%;
+    display: inline-flex;
+    justify-content: center;
+  }
+}

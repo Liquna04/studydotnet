@@ -1,0 +1,39 @@
+/* Ensure drawer content is responsive and doesn't force fixed widths */
+:host {
+  .main-upload {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+
+    .upload-avatar {
+      min-width: 80px;
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 8px;
+      border: 1px dashed #d9d9d9;
+      border-radius: 4px;
+    }
+
+    .avatar-preview img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+  }
+
+  /* Make form controls wrap nicely on small screens */
+  .ant-form-item-control-input {
+    width: 100%;
+  }
+
+  @media (max-width: 480px) {
+    .main-upload {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}

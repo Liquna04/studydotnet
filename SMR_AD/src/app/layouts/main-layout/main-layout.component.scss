@@ -1,0 +1,344 @@
+// --------------------------------------------------
+// Desktop behavior: normal collapse to 80px width
+// --------------------------------------------------
+@media (min-width: 1024px) {
+  .ant-layout-sider-collapsed {
+    width: 80px !important;
+    min-width: 80px !important;
+    max-width: 80px !important;
+    flex: 0 0 80px !important;
+  }
+
+  .ant-layout-sider-collapsed .ant-layout-sider-children {
+    width: 80px !important;
+  }
+}
+
+// --------------------------------------------------
+// Mobile responsive behavior
+// --------------------------------------------------
+@media (max-width: 1024px) {
+  .ant-layout-sider {
+    position: fixed !important;
+    height: 100vh !important;
+    z-index: 200; // Higher than trigger (100) but lower than modals (3000)
+    transition: all 0.2s;
+    width: 240px !important; // Force full width even when "collapsed"
+    min-width: 240px !important;
+    max-width: 240px !important;
+    flex: 0 0 240px !important;
+  }
+
+  .ant-layout-sider-collapsed {
+    transform: translateX(
+      -100%
+    ) !important; // Hide by sliding left instead of changing width
+    margin-left: 0 !important;
+    width: 240px !important; // Keep full width when hidden
+    min-width: 240px !important;
+    max-width: 240px !important;
+    flex: 0 0 240px !important;
+  }
+
+  // Ensure the sidebar content is always visible at full width when shown
+  .ant-layout-sider .ant-layout-sider-children,
+  .ant-layout-sider-collapsed .ant-layout-sider-children {
+    width: 240px !important;
+  }
+
+  // Add overlay when sidebar is open on mobile
+  .full-layout::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 150; // Between sidebar (200) and trigger (100), but below modals (3000)
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+    pointer-events: none;
+  }
+
+  // Show overlay when sidebar is NOT collapsed (open) on mobile
+  .full-layout.mobile-sidebar-open::before {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    cursor: pointer; // Indicate overlay is clickable
+  }
+
+  // Adjust main content area when sidebar is shown
+  .ant-layout-sider:not(.ant-layout-sider-collapsed) ~ .ant-layout {
+    margin-left: 0;
+  }
+}
+
+// Trigger button with lower z-index so modals can overlay it
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+  z-index: 100; /* Lower than modal z-index (3000) so modals can overlay */
+  position: relative;
+}
+
+// Ensure no unintended margin on larger screens
+@media (min-width: 1024px) {
+  .trigger {
+    margin-left: 0 !important;
+  }
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+// --------------------------------------------------
+// Sidebar header: logo + brand text
+// --------------------------------------------------
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  height: 64px; /* match header height */
+  padding: 0 16px;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
+  justify-content: flex-start;
+}
+
+.sidebar-logo {
+  width: 50px;
+  height: 40px;
+  background: url("/img/petrolimex_logo.svg") center / contain no-repeat;
+  flex: 0 0 auto;
+}
+
+.sidebar-brand {
+  color: #207ce5;
+  font-family: "Inria Sans", sans-serif;
+  font-weight: 900;
+  font-size: 18px;
+  white-space: nowrap;
+  transition: opacity 0.25s ease, width 0.25s ease;
+  flex: 1;
+}
+
+.sidebar-brand.hidden {
+  opacity: 0;
+  overflow: hidden;
+  width: 0;
+  pointer-events: none;
+}
+
+/* When sider is collapsed, center the logo inside the sidebar header */
+.ant-layout-sider-collapsed .sidebar-header {
+  justify-content: center;
+}
+
+.ant-layout-sider-collapsed .sidebar-brand {
+  display: none;
+}
+
+// Remove old logo styles since we replaced with sidebar-header
+// .logo {
+//   height: 32px;
+//   background: rgba(255, 255, 255, 0.2);
+//   margin: 16px;
+// }
+
+nz-header {
+  background: #fff; /* main header -> white */
+  padding: 0;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.05);
+}
+
+nz-content {
+  margin: 0 16px;
+}
+
+nz-breadcrumb {
+  margin: 16px 0;
+}
+
+nz-footer {
+  text-align: center;
+}
+
+.ant-layout-sider {
+  background: #fff;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.05);
+  height: 100vh;
+}
+
+/* Sidebar header styling (logo area) */
+
+nz-content {
+  margin: 6px 0px 0px 6px !important;
+
+  // Remove height constraints on mobile
+  @media (max-width: 767px) {
+    height: auto !important;
+    overflow: visible;
+  }
+}
+
+.ant-menu {
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Unified inner content spacing without forcing fixed heights */
+.inner-content {
+  padding: 16px !important;
+  background: #fff;
+  /* Allow flex child to shrink so scroll container can take over */
+  min-height: 0;
+  /* Removed extra bottom padding (was 24px) to avoid outer page scrollbar */
+  padding-bottom: 0 !important;
+}
+
+.ant-collapse-content {
+  visibility: hidden;
+  transition: visibility 0.3s ease-in-out;
+}
+
+.ant-collapse-content-active {
+  visibility: visible;
+}
+.ant-layout-header {
+  height: 64px !important;
+  display: flex;
+  align-items: center;
+  padding-right: 22px;
+}
+.user {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: auto;
+}
+.user-dropdown .user-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px !important; /* reduce padding so no rounded white box appears */
+  border-radius: 0 !important; /* remove rounded container */
+  background: transparent !important; /* override global button bg */
+  border: none !important; /* remove any border */
+  cursor: pointer;
+  overflow: visible !important; /* allow username to overflow if needed */
+}
+
+.user-name {
+  margin-left: 8px;
+  font-weight: 600;
+  color: #222;
+  max-width: 260px; /* allow longer names */
+  display: inline-block;
+  vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 36px; /* match avatar height for proper vertical centering */
+  position: relative;
+  z-index: 2; /* keep name above nearby elements */
+}
+
+/* Hide username on very small screens to keep header compact */
+@media (max-width: 480px) {
+  .user-name {
+    display: none;
+  }
+}
+
+.avatar-wrap {
+  width: 36px; /* slightly larger to provide padding */
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none !important;
+  background: #fff !important; /* white circular badge */
+  padding: 4px; /* inner padding so svg/img don't touch edges */
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatar-svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+  object-fit: contain;
+  margin: auto; /* center the SVG within the circular wrapper */
+}
+.circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle img {
+  height: 36px;
+  width: auto;
+}
+
+//Update scroll
+// On desktop, contain the layout within the viewport
+@media (min-width: 768px) {
+  .full-layout {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .full-layout nz-layout {
+    height: 100%;
+  }
+}
+
+// On mobile, allow the layout to expand and scroll naturally
+@media (max-width: 768px) {
+  .full-layout {
+    height: 100%; // Use 100% instead of auto
+    overflow-y: auto; // Allow vertical scroll
+    -webkit-overflow-scrolling: touch; // Smooth scroll on iOS
+  }
+
+  .full-layout nz-layout {
+    height: auto; // Let inner layout expand
+    min-height: 100%; // Ensure it fills the parent
+  }
+}
+
+/* Make the main content area a flex child that scrolls itself */
+.full-layout > nz-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+.scroll-content {
+  flex: 1 1 auto;
+  min-height: 0; /* important for flexbox scrolling */
+  overflow-y: auto;
+  background: #fff;
+}
+
+/* Remove duplicate .inner-content rule (combined above) */

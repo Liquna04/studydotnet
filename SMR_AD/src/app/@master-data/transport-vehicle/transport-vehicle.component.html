@@ -1,0 +1,309 @@
+﻿<nz-page-header nzBackIcon [nzGhost]="false">
+  <nz-page-header-title>PHƯƠNG TIỆN</nz-page-header-title>
+
+  <nz-page-header-extra>
+    <div class="header-actions">
+      <div class="search-group">
+        <input
+          class="search-input"
+          type="text"
+          nz-input
+          placeholder="Tìm kiếm"
+          [(ngModel)]="filter.keyWord"
+          (keydown.enter)="search()"
+        />
+        <div class="search-buttons">
+          <button
+            (click)="search()"
+            class="flex !items-center gray-btn icon-only"
+            nzType="default"
+            nz-button
+          >
+            <span nz-icon nzType="search"></span>
+          </button>
+          <button
+            (click)="reset()"
+            class="flex !items-center gray-btn icon-only"
+            nzType="default"
+            nz-button
+          >
+            <span nz-icon nzType="redo"></span>
+          </button>
+        </div>
+      </div>
+      <div class="action-group">
+        <button
+          (click)="openCreate()"
+          class="!flex !items-center"
+          nzType="default"
+          nz-button
+        >
+          <span nz-icon nzType="plus"></span> Thêm mới
+        </button>
+        <button
+          (click)="openImport()"
+          class="!flex !items-center"
+          nzType="default"
+          nz-button
+        >
+          <span nz-icon nzType="upload"></span> Nhập Excel
+        </button>
+      </div>
+    </div>
+  </nz-page-header-extra>
+
+  <nz-page-header-content>
+    <div class="data-table">
+      <nz-table
+        #table
+        nzBordered
+        [nzData]="paginationResult.data"
+        [nzFrontPagination]="false"
+        [nzScroll]="{
+          y: tableScrollY || undefined,
+          x: tableScrollX || undefined
+        }"
+        [nzLoading]="loading"
+        [nzShowPagination]="false"
+      >
+        <thead>
+          <tr>
+            <th nzAlign="center" style="width: 60px">STT</th>
+            <th style="width: 120px">Mã phương tiện</th>
+            <th style="width: 140px">Tên phương tiện</th>
+            <th style="width: 130px">Loại hình vận tải</th>
+            <th style="width: 100px">Tổng dung tích</th>
+            <th style="width: 120px">Tên tài xế</th>
+            <th nzAlign="center" style="width: 100px">Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (data of table.data; track data; let i = $index) {
+          <tr (click)="openEdit(data)" style="cursor: pointer">
+            <td nzAlign="center">
+              {{ (filter.currentPage - 1) * filter.pageSize + i + 1 }}
+            </td>
+            <td>
+              <a
+                href="javascript:void(0)"
+                (click)="$event.stopPropagation(); openEdit(data)"
+              >
+                {{ data.code }}
+              </a>
+            </td>
+            <td>{{ data.name }}</td>
+            <td>{{ data.transportTypeName }}</td>
+            <td>{{ data.capacity }}</td>
+            <td>{{ data.driver }}</td>
+            <td nzAlign="center">
+              <nz-tag [nzColor]="data.isActive ? 'success' : 'error'">
+                <nz-icon
+                  [nzType]="data.isActive ? 'check-circle' : 'close-circle'"
+                />
+                <span>{{ data.isActive ? "Kích hoạt" : "Khóa" }}</span>
+              </nz-tag>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </nz-table>
+    </div>
+
+    <nz-pagination
+      class="pagination-spacing"
+      [nzPageIndex]="filter.currentPage"
+      [nzTotal]="paginationResult.totalRecord"
+      [nzPageSize]="filter.pageSize"
+      [nzPageSizeOptions]="[10, 20, 30, 50, 100]"
+      [nzShowSizeChanger]="true"
+      (nzPageIndexChange)="onPageChange($event)"
+      (nzPageSizeChange)="onPageSizeChange($event)"
+    >
+    </nz-pagination>
+  </nz-page-header-content>
+</nz-page-header>
+
+<!-- Import Excel Modal -->
+<ng-template #importTitleTpl>
+  <div
+    style="
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    "
+  >
+    <div style="font-weight: 600; color: rgb(38, 77, 141)">Nhập Excel</div>
+    <button nz-button nzType="default" (click)="closeImport()">Đóng</button>
+  </div>
+</ng-template>
+
+<nz-modal
+  [(nzVisible)]="importVisible"
+  [nzTitle]="importTitleTpl"
+  [nzFooter]="importModalFooter"
+  (nzOnCancel)="closeImport()"
+  [nzMaskClosable]="false"
+  [nzClosable]="false"
+>
+  <ng-container *nzModalContent>
+    <div class="modal-item" style="margin-bottom: 20px">
+      <label style="display: block; margin-bottom: 8px; font-weight: 500">
+        Chọn file Excel
+      </label>
+
+      <nz-upload
+        nzType="drag"
+        [(nzFileList)]="fileList"
+        [nzBeforeUpload]="beforeUpload"
+        (nzChange)="handleFileChange($event)"
+      >
+        <p class="ant-upload-drag-icon">
+          <nz-icon nzType="inbox"></nz-icon>
+        </p>
+        <p class="ant-upload-text">Kéo & thả file vào đây hoặc bấm để chọn</p>
+        <p class="ant-upload-hint">Hỗ trợ định dạng .xlsx, .xls</p>
+      </nz-upload>
+
+      <div
+        *ngIf="importMessage"
+        class="import-message"
+        style="
+          margin-top: 10px;
+          padding: 8px;
+          background: #f0f8ff;
+          border-radius: 4px;
+        "
+      >
+        {{ importMessage }}
+      </div>
+
+      <div style="margin-top: 15px">
+        <a
+          href="/TransportVehicleTemplate.xlsx"
+          download="TransportVehicleTemplate.xlsx"
+        >
+          <nz-icon nzType="download"></nz-icon>
+          Tải xuống biểu mẫu
+        </a>
+      </div>
+    </div>
+  </ng-container>
+</nz-modal>
+
+<ng-template #importModalFooter>
+  <button
+    nz-button
+    nzType="default"
+    [disabled]="!selectedFileObj"
+    (click)="submitImport()"
+  >
+    <nz-icon nzType="check"></nz-icon> Xác nhận
+  </button>
+</ng-template>
+
+<!-- Drawer Form -->
+<nz-drawer
+  [nzMask]="true"
+  [nzWidth]="drawerWidth"
+  [nzVisible]="visible"
+  nzPlacement="right"
+  [nzTitle]="isEdit ? 'Cập nhật' : 'Thêm mới'"
+  [nzExtra]="extra"
+  (nzOnClose)="close()"
+  [nzClosable]="false"
+>
+  <ng-container *nzDrawerContent>
+    <form nz-form nzLayout="vertical" [formGroup]="form">
+      <nz-form-item>
+        <nz-form-label nzRequired>Mã phương tiện vận chuyển</nz-form-label>
+        <nz-form-control nzErrorTip="Vui lòng nhập mã phương tiện">
+          <input
+            nz-input
+            formControlName="code"
+            placeholder="Nhập mã phương tiện vận chuyển"
+            [disabled]="isEdit"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzRequired>Tên phương tiện vận chuyển</nz-form-label>
+        <nz-form-control nzErrorTip="Vui lòng nhập tên phương tiện">
+          <input
+            nz-input
+            formControlName="name"
+            placeholder="Nhập tên phương tiện vận chuyển"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzRequired>Loại hình vận tải</nz-form-label>
+        <nz-form-control nzErrorTip="Vui lòng chọn loại hình vận tải">
+          <nz-select
+            nzShowSearch
+            nzAllowClear
+            formControlName="type"
+            nzPlaceHolder="Chọn loại hình vận tải"
+          >
+            <nz-option
+              *ngFor="let type of transportTypes"
+              [nzValue]="type.code"
+              [nzLabel]="type.name"
+            ></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzRequired>Dung tích</nz-form-label>
+        <nz-form-control nzErrorTip="Vui lòng nhập dung tích">
+          <input
+            nz-input
+            formControlName="capacity"
+            placeholder="Nhập dung tích"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzRequired>Tài xế</nz-form-label>
+        <nz-form-control nzErrorTip="Vui lòng nhập tên tài xế">
+          <input
+            nz-input
+            formControlName="driver"
+            placeholder="Nhập tên tài xế"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Trạng thái</nz-form-label>
+        <nz-form-control>
+          <nz-radio-group formControlName="isActive">
+            <label nz-radio [nzValue]="true">Kích hoạt</label>
+            <label nz-radio [nzValue]="false">Khóa</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-drawer>
+
+<ng-template #extra>
+  <nz-space>
+    <button
+      *nzSpaceItem
+      nz-button
+      nzType="default"
+      [nzLoading]="loading"
+      (click)="submit()"
+    >
+      <span nz-icon nzType="save"></span> Lưu
+    </button>
+    <button *nzSpaceItem nz-button nzType="default" (click)="close()">
+      <span nz-icon nzType="close"></span> Đóng
+    </button>
+  </nz-space>
+</ng-template>

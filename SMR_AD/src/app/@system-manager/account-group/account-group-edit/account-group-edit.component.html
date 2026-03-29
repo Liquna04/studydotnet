@@ -1,0 +1,97 @@
+<nz-drawer
+  [nzMask]="true"
+  [nzWidth]="drawerWidth"
+  [nzVisible]="visible"
+  nzPlacement="right"
+  nzTitle="Cập nhật"
+  [nzExtra]="extra"
+  (nzOnClose)="closeDrawer()"
+  [nzClosable]="false"
+>
+  <nz-tabset *nzDrawerContent>
+    <nz-tab nzTitle="Thông tin">
+      <form
+        nz-form
+        nzLayout="vertical"
+        [formGroup]="validateForm"
+        (ngSubmit)="submitForm()"
+      >
+        <app-input-clear
+          placeholder="Nhập tên nhóm tài khoản"
+          [required]="true"
+          label="Tên nhóm tài khoản"
+          [control]="$any(validateForm).controls['name']"
+        >
+        </app-input-clear>
+        <app-input-clear
+          type="textarea"
+          placeholder="Ghi chú"
+          label="Ghi chú"
+          [control]="$any(validateForm).controls['notes']"
+        >
+        </app-input-clear>
+
+        <nz-form-item>
+          <nz-form-label>Trạng thái</nz-form-label>
+          <nz-form-control>
+            <nz-radio-group formControlName="isActive">
+              <label nz-radio [nzValue]="true">Kích hoạt</label>
+              <label nz-radio [nzValue]="false">Khoá</label>
+            </nz-radio-group>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </nz-tab>
+    <nz-tab nzTitle="Phân quyền">
+      <nz-tree
+        #treeCom
+        nzCheckable
+        nzMultiple
+        [nzData]="nodes"
+        [nzShowExpand]="true"
+        nzBlockNode
+        (nzOnDrop)="nzEvent($event)"
+        [nzSearchValue]="searchValue"
+        (nzSearchValueChange)="nzEvent($event)"
+        (nzOnDrop)="onDrop($event)"
+        [nzCheckedKeys]="initialCheckedNodes"
+        (nzCheckBoxChange)="onCheckBoxChange($event)"
+        (nzClick)="onClick($event)"
+      ></nz-tree>
+    </nz-tab>
+    <nz-tab nzTitle="Thành viên">
+      <div style="overflow: auto">
+        <nz-transfer
+          [nzTitles]="['Tài khoản chưa gán nhóm', 'Nhóm ' + nameShow]"
+          [nzListStyle]="{ width: widthDeault, 'height.px': heightDeault }"
+          [nzDataSource]="listAccount"
+          nzShowSearch
+        ></nz-transfer>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+</nz-drawer>
+<ng-template #extra>
+  <div class="drawer-header-actions">
+    <div class="primary-actions">
+      <button
+        [nzLoading]="loading"
+        nz-button
+        nzType="default"
+        class="!flex !items-center"
+        (click)="submitForm()"
+      >
+        <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+      </button>
+      <button
+        nz-button
+        nzType="default"
+        class="!flex !items-center"
+        nzDanger
+        (click)="close()"
+      >
+        <span nz-icon nzType="close-circle" nzTheme="outline"></span>Đóng
+      </button>
+    </div>
+  </div>
+</ng-template>

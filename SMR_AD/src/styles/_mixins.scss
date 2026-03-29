@@ -1,0 +1,46 @@
+@use "sass:map" as map;
+@use "./_variables.scss" as vars;
+// --------------------------------------------------
+// Mixins dùng chung -----------------------------------------------
+// File này chứa mixin tái sử dụng để giảm trùng lặp trong SCSS
+// --------------------------------------------------
+
+// --------------------------------------------------
+// Media query theo key trong $breakpoints (vd: sm, md, lg)
+// --------------------------------------------------
+@mixin mq($key) {
+  $val: map.get(vars.$breakpoints, $key);
+  @if $val {
+    @media (max-width: $val) {
+      @content;
+    }
+  }
+}
+
+// --------------------------------------------------
+// Card: nền trắng, bo góc và shadow (tham số $radius)
+// --------------------------------------------------
+@mixin card($radius: vars.$radius-lg) {
+  background: #fff;
+  border-radius: $radius;
+  box-shadow: vars.$shadow-card;
+}
+
+// --------------------------------------------------
+// Căn giữa theo flex (căn ngang + dọc)
+// --------------------------------------------------
+@mixin center-flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// --------------------------------------------------
+// Truncate: giới hạn số dòng bằng -webkit-line-clamp (tham số $lines)
+// --------------------------------------------------
+@mixin truncate($lines: 1) {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+}

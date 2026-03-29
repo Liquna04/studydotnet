@@ -1,0 +1,361 @@
+// Container cho table và pagination
+:host {
+  display: block;
+}
+
+// Header responsive styles
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.search-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-grow: 1;
+  min-width: 300px;
+}
+
+.search-group .search-input {
+  flex: 1;
+}
+
+.search-buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.action-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Ensure button content is centered even when utility classes force flex alignment */
+.action-group button {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+
+.action-group button span,
+.action-group button nz-icon,
+.action-group button i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-buttons .gray-btn,
+.button-group .gray-btn {
+  background: #f5f6f8;
+  border: 1px solid #d9d9d9;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+:host ::ng-deep .ant-page-header-heading {
+  flex-wrap: wrap;
+}
+
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+  :host ::ng-deep .ant-page-header-heading-extra {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .action-group {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .action-group button {
+    flex: 1 1 0;
+    width: auto;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  :host ::ng-deep .ant-page-header-heading-extra {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .search-group {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .action-group {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-group button {
+    width: 100%;
+    justify-content: center !important;
+  }
+
+  :host ::ng-deep .data-table .ant-table-wrapper {
+    height: auto;
+  }
+
+  :host ::ng-deep .data-table .ant-table-container,
+  :host ::ng-deep .data-table .ant-table-content {
+    height: auto;
+  }
+
+  :host ::ng-deep .data-table .ant-table-thead > tr > th,
+  :host ::ng-deep .data-table .ant-table-tbody > tr > td {
+    padding: 8px 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.account-group-table-container {
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03),
+    0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  /* Let the parent dictate height using flex; avoid rigid viewport calcs */
+  min-height: 0;
+
+  .auto-scroll-table {
+    flex: 1 1 auto; // Take remaining space
+    min-height: 0; // allow inner scroll
+    overflow: hidden;
+
+    .ant-table-wrapper {
+      height: 100%;
+
+      .ant-table-container {
+        height: 100%;
+
+        .ant-table-content {
+          overflow-x: auto;
+          overflow-y: auto;
+          height: 100%;
+          padding-bottom: 8px; // minimal inner padding; sticky footer handles visibility
+          box-sizing: border-box;
+        }
+      }
+    }
+  }
+
+  // Pagination always at bottom
+  :host ::ng-deep app-table-pagination {
+    flex-shrink: 0; // Prevent shrinking
+
+    .table-pagination {
+      border-top: 1px solid #f0f0f0;
+      background: #fff;
+      border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
+      margin-top: auto; // Push to bottom
+    }
+  }
+}
+
+// Style cho table
+.auto-scroll-table {
+  .ant-table-thead > tr > th {
+    white-space: nowrap;
+    text-align: center;
+    font-weight: 600;
+    background: #fafafa;
+  }
+
+  .ant-table-tbody > tr > td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // Style cho các link
+  a {
+    color: #1890ff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  // Mobile responsive adjustments
+  @media (max-width: 767px) {
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td {
+      padding: 8px 4px;
+      font-size: 12px;
+    }
+
+    .ant-table-tbody > tr > td {
+      max-width: 120px;
+    }
+  }
+
+  @media (max-width: 575px) {
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td {
+      padding: 6px 2px;
+      font-size: 11px;
+    }
+
+    .ant-table-tbody > tr > td {
+      max-width: 100px;
+    }
+  }
+}
+
+/* Add .data-table rules from account-index to match layout */
+.data-table {
+  flex: 1;
+  background: #fff;
+
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03),
+    0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+  overflow: hidden;
+}
+
+:host ::ng-deep .data-table .ant-table-wrapper {
+  height: 100%;
+}
+
+:host ::ng-deep .data-table .ant-table-container {
+  height: 100%;
+}
+
+:host ::ng-deep .data-table .ant-table-content {
+  overflow-x: auto;
+}
+
+:host ::ng-deep .data-table .ant-table-tbody > tr > td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:host ::ng-deep .data-table .ant-table-body {
+  padding-bottom: 0;
+  overflow: auto;
+}
+
+/* Mobile adjustments copied from account-index */
+@media (max-width: 768px) {
+  :host ::ng-deep .data-table .ant-table-wrapper {
+    height: auto;
+  }
+
+  :host ::ng-deep .data-table .ant-table-container,
+  :host ::ng-deep .data-table .ant-table-content {
+    height: auto;
+  }
+
+  :host ::ng-deep .data-table .ant-table-thead > tr > th,
+  :host ::ng-deep .data-table .ant-table-tbody > tr > td {
+    padding: 8px 4px;
+    font-size: 12px;
+  }
+}
+
+/* Remove border/background from prev/next pagination buttons */
+:host ::ng-deep .ant-pagination-prev,
+:host ::ng-deep .ant-pagination-next {
+  button {
+    border: none !important;
+    background: transparent !important;
+    color: rgba(0, 0, 0, 0.65) !important;
+    padding: 4px 8px !important;
+    height: auto !important;
+    width: auto !important;
+    min-width: unset !important;
+    justify-content: unset !important;
+
+    &:hover {
+      color: #1890ff !important;
+      background: transparent !important;
+      border: none !important;
+    }
+  }
+
+  .ant-pagination-item-link {
+    border: none !important;
+    background: transparent !important;
+    color: rgba(0, 0, 0, 0.65) !important;
+  }
+
+  &:hover .ant-pagination-item-link {
+    color: #1890ff !important;
+    border: none !important;
+  }
+}
+
+/* Alternative approach: target via pagination-spacing class */
+::ng-deep .pagination-spacing .ant-pagination-prev button,
+::ng-deep .pagination-spacing .ant-pagination-next button,
+::ng-deep .pagination-spacing .ant-pagination-prev .ant-pagination-item-link,
+::ng-deep .pagination-spacing .ant-pagination-next .ant-pagination-item-link {
+  border: none !important;
+  background: transparent !important;
+  color: rgba(0, 0, 0, 0.65) !important;
+  padding: 4px 8px !important;
+  height: auto !important;
+  width: auto !important;
+  min-width: unset !important;
+  justify-content: unset !important;
+}
+
+::ng-deep .pagination-spacing .ant-pagination-prev button:hover,
+::ng-deep .pagination-spacing .ant-pagination-next button:hover,
+::ng-deep
+  .pagination-spacing
+  .ant-pagination-prev:hover
+  .ant-pagination-item-link,
+::ng-deep
+  .pagination-spacing
+  .ant-pagination-next:hover
+  .ant-pagination-item-link {
+  color: #1890ff !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+// Allow table cells to expand beyond initial width based on content
+:host ::ng-deep .ant-table-cell {
+  word-break: break-word !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+}
+
+// Allow links and text inside cells to wrap
+:host ::ng-deep .ant-table-cell a,
+:host ::ng-deep .ant-table-cell span {
+  word-break: break-word !important;
+  overflow: visible !important;
+}

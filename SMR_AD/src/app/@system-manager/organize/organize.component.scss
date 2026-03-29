@@ -1,0 +1,169 @@
+.btn_success {
+  margin-left: 6px;
+  background-color: #28a745;
+  border: 1px solid #28a745;
+  color: #ffffff;
+}
+
+.btn_warning {
+  background-color: #28a745;
+  border: 1px solid #28a745;
+  color: #ffffff;
+}
+
+.node_icon {
+  color: #ff4d4f;
+  z-index: 10;
+}
+
+.icon-tree {
+  font-size: 10px;
+}
+
+// Styles for readonly mode
+.organize-readonly {
+  height: 100%;
+
+  .readonly-organize-content {
+    padding: 12px;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03),
+      0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .search-section {
+      margin-bottom: 12px;
+      border-bottom: 1px solid #f0f0f0;
+      padding-bottom: 12px;
+      flex-shrink: 0;
+
+      .flex {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      input[nz-input] {
+        flex: 1;
+      }
+
+      .gray-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .tree-section {
+      flex: 1;
+      max-height: calc(100vh - 250px);
+      overflow-y: auto;
+
+      .ant-tree {
+        // Ensure selected node blue background persists even on hover
+        .ant-tree-node-content-wrapper {
+          // Default hover for non-selected nodes
+          &:not(.ant-tree-node-selected):hover {
+            background-color: #f5f5f5;
+          }
+
+          // Selected nodes should always show the selected background
+          &.ant-tree-node-selected {
+            background-color: #e6f7ff !important;
+          }
+        }
+
+        .note_title {
+          cursor: pointer;
+          padding: 4px 8px;
+          border-radius: 4px;
+
+          // Only change background on hover for nodes that are not selected.
+          // This prevents the inner .note_title hover rule from overriding
+          // the selected node background when the user hovers again.
+          &:hover {
+            // apply only when the parent node is not selected
+            .ant-tree-node-content-wrapper:not(.ant-tree-node-selected) & {
+              background-color: #f0f0f0;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Styles for fullpage mode
+// Header responsive styles
+.header-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.search-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 320px;
+}
+
+.search-group .search-input {
+  width: 280px;
+  max-width: 40vw;
+}
+
+.search-buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.action-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.search-buttons .gray-btn,
+.button-group .gray-btn {
+  background: #f5f6f8;
+  border: 1px solid #d9d9d9;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .search-group {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .search-group .search-input {
+    flex: 1;
+    max-width: none;
+  }
+
+  .action-group {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+.organize-fullpage {
+  .ant-page-header {
+    background: white;
+    margin-bottom: 16px;
+  }
+}

@@ -1,0 +1,95 @@
+// Design tokens (biến hệ thống) --------------------
+// File này chứa toàn bộ biến màu, kích thước, shadow, breakpoint
+// Ghi nhớ: Dùng $color-* trong SCSS, styles.scss sẽ chuyển thành --color-* cho components
+// ------------------------------------------------
+
+// --------------------------------------------------
+// Màu chính và phụ
+// --------------------------------------------------
+$color-primary: #1546e8;
+$color-primary-dark: #0d3cc7;
+$color-accent: #f58026;
+$color-accent-light: #ff9f55;
+$color-white: #fff;
+
+// --------------------------------------------------
+// Màu xám và border
+// --------------------------------------------------
+$color-gray-light: #f5f6fa;
+$color-gray-medium: #e9ecef;
+$color-border: #e9ecef;
+
+// --------------------------------------------------
+// Màu chữ
+// --------------------------------------------------
+$color-text-primary: #212529;
+$color-text-secondary: #6c757d;
+$color-text-muted: #adb5bd;
+$color-text-description: #494949;
+$color-blue-light: #4879f6;
+
+// --------------------------------------------------
+// Border radius
+// --------------------------------------------------
+$radius-sm: 6px;
+$radius-md: 8px;
+$radius-lg: 12px;
+
+// --------------------------------------------------
+// Shadow effects
+// --------------------------------------------------
+$shadow-card: 0 10px 40px rgba(0, 0, 0, 0.08);
+$shadow-hover: 0 8px 20px rgba(21, 77, 232, 0.18);
+
+// --------------------------------------------------
+// Breakpoints responsive
+// --------------------------------------------------
+$breakpoints: (
+  sm: 480px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1200px,
+);
+
+// --------------------------------------------------
+// Khoảng cách spacing
+// --------------------------------------------------
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 24px;
+$space-6: 32px;
+
+.confirm-row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+}
+
+.confirm-title {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: bold;
+  padding-bottom: 16px;
+  border-bottom: 1px solid $color-border;
+}
+
+.warning-icon {
+  margin-right: 8px;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.confirm-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.confirm-actions button {
+  margin-left: 0;
+}

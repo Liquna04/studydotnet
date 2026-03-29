@@ -1,0 +1,232 @@
+.col-box {
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+}
+
+/* Add dividing line between left and right columns */
+.order-create-container nz-col:nth-child(2) {
+  padding-left: 8px;
+  border-left: 1px solid #e8e8e8;
+}
+
+.order-create-container nz-col:nth-child(2) .col-box {
+  border-left: none;
+}
+
+.items-section .items-header {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.item-search-modal .modal-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0 12px;
+}
+
+.item-search-modal .modal-title {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-size: medium;
+}
+
+.added-pill {
+  background: #f5f5f5;
+  border-color: #e8e8e8;
+  color: #8c8c8c;
+}
+
+/* Hide pagination under the left items table */
+.items-section .ant-table-pagination {
+  display: none !important;
+}
+
+.plain-items-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.plain-items-table th,
+.plain-items-table td {
+  border: 1px solid #f0f0f0;
+  padding: 12px;
+  vertical-align: middle;
+}
+.plain-items-table thead th {
+  background: #fafafa;
+  font-weight: 700;
+}
+
+.plain-items-table tfoot {
+  display: none;
+}
+
+.order-form .field-input,
+.order-form nz-date-picker.field-input,
+.order-form nz-select.field-input {
+  width: 100%;
+  min-height: 40px;
+  box-sizing: border-box;
+}
+
+.order-form nz-form-item {
+  margin-bottom: 12px;
+}
+
+.order-form nz-form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.order-history {
+  margin-top: 16px;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 12px;
+}
+.order-history .history-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.order-history .history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.order-history .history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px dashed #f0f0f0;
+}
+.order-history .history-meta {
+  color: #8c8c8c;
+}
+
+/* Force header action buttons to stay on a single row for Order Edit page */
+.order-header-actions {
+  display: flex !important; /* override grid from global styles */
+  flex-wrap: nowrap !important; /* prevent wrapping to multiple rows */
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end; /* keep buttons aligned to the right */
+  overflow-x: auto; /* allow horizontal scroll on very small screens */
+  -webkit-overflow-scrolling: touch;
+}
+.order-header-actions .action-item {
+  flex: 0 0 auto; /* don't grow/shrink, keep natural width */
+  width: auto !important;
+}
+.order-header-actions .action-item button {
+  white-space: nowrap; /* prevent button content from wrapping */
+}
+.order-history-box {
+  .history-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #1a1a1a;
+  }
+
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed #f0f0f0;
+  }
+
+  .history-meta {
+    color: #8c8c8c;
+    font-size: 13px;
+    flex: 1;
+  }
+
+  .history-action {
+    flex: 0 0 auto;
+    margin-left: 16px;
+  }
+}
+/* Responsive behavior: tablet and mobile */
+@media (max-width: 1024px) and (min-width: 769px) {
+  /* Tablet: two rows, each row full width; two buttons per row */
+  .order-header-actions {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr; /* two columns */
+    grid-auto-rows: auto;
+    gap: 8px;
+    justify-items: stretch;
+    align-items: center;
+  }
+
+  .order-header-actions .action-item {
+    width: 100% !important;
+    display: block;
+  }
+
+  .order-header-actions .action-item button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile: stack into 4 rows, each button full width */
+  .order-header-actions {
+    display: grid !important;
+    grid-template-columns: 1fr; /* single column */
+    gap: 8px;
+    justify-items: stretch;
+    align-items: stretch;
+  }
+
+  .order-header-actions .action-item {
+    width: 100% !important;
+    display: block;
+  }
+
+  .order-header-actions .action-item button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Alternative approach: target via pagination-spacing class */
+::ng-deep .pagination-spacing .ant-pagination-prev button,
+::ng-deep .pagination-spacing .ant-pagination-next button,
+::ng-deep .pagination-spacing .ant-pagination-prev .ant-pagination-item-link,
+::ng-deep .pagination-spacing .ant-pagination-next .ant-pagination-item-link {
+  border: none !important;
+  background: transparent !important;
+  color: rgba(0, 0, 0, 0.65) !important;
+  padding: 4px 8px !important;
+  height: auto !important;
+  width: auto !important;
+  min-width: unset !important;
+  justify-content: unset !important;
+}
+
+::ng-deep .pagination-spacing .ant-pagination-prev button:hover,
+::ng-deep .pagination-spacing .ant-pagination-next button:hover,
+::ng-deep
+  .pagination-spacing
+  .ant-pagination-prev:hover
+  .ant-pagination-item-link,
+::ng-deep
+  .pagination-spacing
+  .ant-pagination-next:hover
+  .ant-pagination-item-link {
+  color: #1890ff !important;
+  background: transparent !important;
+  border: none !important;
+}
